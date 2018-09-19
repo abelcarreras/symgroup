@@ -1,0 +1,70 @@
+#!/bin/sh
+
+#   Configuration script for building symgroup
+#   To use it requires cmake 2.6+
+#
+#   Use './configure help' to see available options
+
+FC0="gfortran"
+CMAKE_GENERATOR="Unix Makefiles"
+USE_MKL="NO"
+BUILD_TYPE=RELEASE
+
+print_help() {
+    echo "To configure WFNSYM build, run"
+    echo "$0 [options]"
+    echo ""
+    echo "Compilers (default gcc):"
+    echo " * gcc         -- GNU compiler (gfortran)"
+    echo " * intel       -- Intel compiler (ifort)"
+    echo ""
+    echo "LAPACK libraries (optional):"
+    echo " * mkl         -- Intel MKL (you may need to edit MKL path in CMakeList.txt )"
+    echo "Build type (default release):"
+    echo " * debug       -- Quick build few optimizations"
+    echo " * release     -- Slow build many optimizations"
+   }
+
+set_compiler() {
+    if [ -n "$CC0" ]; then
+        echo "Error: Choose only one compiler option."
+        exit 1
+    fi
+    FC0=$1
+}
+
+while [ $# -gt 0 ]; do
+    case $1 in
+        -h|-?|--help|help ) print_help
+                        exit 1
+                        ;;
+        gcc )           FC0="gfortran"
+                        ;;
+        intel )         FC0="ifort"
+                        ;;
+        mkl )           USE_MKL="YES"
+                        ;;
+        debug )         BUILD_TYPE=DEBUG
+                        ;;
+        release )       BUILD_TYPE=RELEASE
+                        ;;
+        * )             echo "Unknown option: $1"
+                        print_help
+                        exit 1
+    esac
+    shift
+done
+
+mkdir -p build
+cd build
+
+cmake -G "$CMAKE_GENERATOR" \
+-D CMAKE_BUILD_TYPE=$BUILD_TYPE \
+-D CMAKE_INSTALL_PREFIX=bin \
+-D WITH_MKL="$USE_MKL" \
+-D CMAKE_Fortran_COMPILER="$FC0" ..
+
+echo
+echo "to compile this software do:"
+echo "cd build"
+echo "make"
