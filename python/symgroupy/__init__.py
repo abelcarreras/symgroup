@@ -1,3 +1,5 @@
+__version__ = '0.1'
+
 from symgroupy import symgrouplib
 import numpy as np
 
@@ -64,8 +66,6 @@ class Symgroupy:
 
 
 if __name__ == '__main__':
-
-    #symgrouplib.symgroup('test')
 
     coordinates = [[5.51829, -1.68040, 22.81703],
                    [6.78978, -3.22298, 23.08474],
