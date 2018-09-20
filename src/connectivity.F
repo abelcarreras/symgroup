@@ -51,8 +51,8 @@ c
            lab(i:i)=char(l-32)
           endif
 	 end do
-	 if((ichar(lab(2:2)).lt.65).or
-     .   .(ichar(lab(2:2)).gt.90)) lab(2:2)=' '
+	 if((ichar(lab(2:2)).lt.65).or.
+     &  (ichar(lab(2:2)).gt.90)) lab(2:2)=' '
 	 ctrl=.false.
 	 ATOM: do i=1,85
 	  if(trim(lab).eq.trim(sim(i)))then

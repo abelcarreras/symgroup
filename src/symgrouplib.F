@@ -1,6 +1,7 @@
 
-       subroutine symgroup(input, coordinates_2, multi_2,
-     &labels_2, central_atom_2, oper_2, oeix_2, nat_2)
+       subroutine symgroup(coordinates, Nmulti_inp,
+     &symbols, pm, oper, oeix, m, s_max, NearStruc,
+     &v_max, optper, refAxis, sm, vm)
 c
 c
 c   Aquest programa mesura la distancia entre un estructura i l'estructura
@@ -21,6 +22,8 @@ c  iunit unitat d'entrada o sortida de dades
 c  m     numero d'atoms
 c  nll   numero de lligands
 c  pm    posicio del metall
+c  coordinates  coordenades dels atoms (inclos el metall)
+c  symbols  symbols atomics (o etiquetes dels atoms)
 c  oeix  ordre de l'eix de rotacio
 c  oper  operacio de simetria: E i r c
 c  noper numero d'operacions del grup
@@ -69,13 +72,12 @@ c        character :: yn*1    ! DCC: this version always runs
         real*8  :: apmt(4)
       double precision  cm(3)
 
-
-      real*8, dimension(nat,3) :: coordinates_2
-      integer :: multi_2, oeix_2, central_atom_2, nat_2
-      character :: oper_2*1
-      character, dimension(nat) :: labels_2*2
-
-
+      real*8, dimension(m,3) :: coordinates, NearStruc
+      integer :: Nmulti_inp
+      character, dimension(m) :: symbols*2
+      real*8, dimension(3) :: v_max
+      integer, dimension(m) :: optper
+      real*8, dimension(4,3) :: refAxis
 C--MQL ///
 c
 	common  /int1/dimr
@@ -89,18 +91,6 @@ C--MQL --
         common /logical/label,multi,hconv,permu,atfix,
      & rfix,dim2D,csd,connect,nolabel,mute,centerfix
 C--MQL --/
-
-c
-c      Updated things
-      write(6,*) 'test_in'
-       if ((central_atom_2).eq.0) then
-         nll = nat_2
-       else
-         nll = nat_2 - 1
-       endif
-      pm = central_atom_2
-      write(6,*) nll, pm, central_atom_2
-
 
 	title=' '
 	pi = 4.0d0*atan(1.0d0)
@@ -124,17 +114,31 @@ c
 	csd     = .false.
 	nolabel=.false.
 C--MQL
-        mute=.false.
+        mute=.true.
 C--MQL ///
 c
+c      Updated things
+       if ((pm).eq.0) then
+         nll = m
+       else
+         nll = m - 1
+       endif
+
+      title=' '
+      name=' '
+
+      Nmulti = nmulti_inp
+      if (Nmulti.gt.0) multi = .true.
+      label = .true.
+      input = 'test'
 
 c Read input file name (first argument)
 c      CALL getarg(1,input)
-      IF (trim(input).eq.'') THEN
-        write(0,*) 'No input file provided'
-        write(0,*) 'usage: ./symgroup input_file'
-        stop
-      ENDIF
+c      IF (trim(input).eq.'') THEN
+c        write(0,*) 'No input file provided'
+c        write(0,*) 'usage: ./symgroup input_file'
+c        stop
+c      ENDIF
 
 	IF (trim(input).eq.'+') THEN
 c       open(unit=33,file="operations.dat",status='unknown')
@@ -183,81 +187,78 @@ c
 c Open I/O files
       k=max(len_trim(input),5)
       if (input(k-4:k).eq.'.zdat') input(k-4:k)='    '
-      open(unit=1,file=trim(input)//".zdat",status='old',iostat=k)
-      open(unit=2,file=trim(input)//".ztab",status='unknown')
-      open(unit=3,file=trim(input)//".zout",status='unknown')
+c      open(unit=1,file=trim(input)//".zdat",status='old',iostat=k)
+c      open(unit=2,file=trim(input)//".ztab",status='unknown')
+c      open(unit=3,file=trim(input)//".zout",status='unknown')
 
 c Write Header to .zout file
-      write(3,*)' '
-      write(3,*)'  *********************************************'
-      write(3,*)'  *    Welcome to the SYMGROUP Program v0     *'
-      write(3,*)'  *                                           *'
-      write(3,*)'  *   Continuous Symmetry Group calculation   *'
-      write(3,*)'  *********************************************'
-      write(3,*)' '
-c     write(3,*)' by David Casanova'
-      write(3,*)' (c) 2009 Electronic Structure Group'
-      write(3,*)'            Universitat de Barcelona'
-      write(3,*)' '
+c      write(3,*)' '
+c      write(3,*)'  *********************************************'
+c      write(3,*)'  *    Welcome to the SYMGROUP Program v0     *'
+c      write(3,*)'  *                                           *'
+c      write(3,*)'  *   Continuous Symmetry Group calculation   *'
+c      write(3,*)'  *********************************************'
+c      write(3,*)' '
+c      write(3,*)' by David Casanova'
+c      write(3,*)' (c) 2009 Electronic Structure Group'
+c      write(3,*)'            Universitat de Barcelona'
+c      write(3,*)' '
 
 c Write Header to .ztab file
-      write(2,*)' '
-      write(2,*)'  *********************************************'
-      write(2,*)'  *    Welcome to the SYMGROUP Program v0     *'
-      write(2,*)'  *                                           *'
-      write(2,*)'  *   Continuous Symmetry Group calculation   *'
-      write(2,*)'  *********************************************'
-      write(2,*)' '
-c     write(2,*)' by David Casanova'
-      write(2,*)' (c) 2009 Electronic Structure Group'
-      write(2,*)'            Universitat de Barcelona'
-      write(2,*)' '
+c      write(2,*)' '
+c      write(2,*)'  *********************************************'
+c      write(2,*)'  *    Welcome to the SYMGROUP Program v0     *'
+c      write(2,*)'  *                                           *'
+c      write(2,*)'  *   Continuous Symmetry Group calculation   *'
+c      write(2,*)'  *********************************************'
+c      write(2,*)' '
+c      write(2,*)' by David Casanova'
+c      write(2,*)' (c) 2009 Electronic Structure Group'
+c      write(2,*)'            Universitat de Barcelona'
+c      write(2,*)' '
 
-      if (k.eq.0) then
-       write(3,*)' '
-       write(3,"('Reading data from file ',a)") trim(input)//'.zdat...'
-       write(3,*)' '
-      else
-       write(3,"('File not found')")
-      end if
+c      if (k.eq.0) then
+c       write(0,*)' '
+c       write(0,"('Reading data from file ',a)") trim(input)//'.zdat...'
+c       write(0,*)' '
+c      else
+c       write(0,"('File not found')")
+c      end if
 
-	call nextline(iunit)
-	read(iunit,"(a)") line
-	if((line(1:1).eq.'$').and.(len_trim(title).eq.0)) then
-	 title(1:79)=line(2:80)
-	 call nextline(iunit)
-	 read(iunit,"(a)") line
-	end if
-	do while (keyctrl)
-	 if((line(1:1).eq.'%').and.(len_trim(line).gt.1)) then
-	  call options(line)
-	  call nextline(iunit)
-	  read(iunit,"(a)") line
-	 else
-	  keyctrl=.false.
-	 end if
-	end do
+c	call nextline(iunit)
+c	read(iunit,"(a)") line
+c	if((line(1:1).eq.'$').and.(len_trim(title).eq.0)) then
+c	 title(1:79)=line(2:80)
+c	 call nextline(iunit)
+c	 read(iunit,"(a)") line
+c	end if
+c	do while (keyctrl)
+c	 if((line(1:1).eq.'%').and.(len_trim(line).gt.1)) then
+c	  call options(line)
+c	  call nextline(iunit)
+c	  read(iunit,"(a)") line
+c	 else
+c	  keyctrl=.false.
+c	 end if
+c	end do
 
 c At the moment, fixing orientation (atfix or rfix) not ready.
 	IF (atfix .OR. rfix) THEN
-	  WRITE(2,*)'ERROR. ATFIX and RFIX not available in this version'
-	  WRITE(3,*)'ERROR. ATFIX and RFIX not available in this version'
+	  WRITE(0,*)'ERROR. ATFIX and RFIX not available in this version'
+c	  WRITE(3,*)'ERROR. ATFIX and RFIX not available in this version'
 	  STOP
 	ENDIF
 c At the moment, HCONV not ready
 	IF (hconv) THEN
-        WRITE(2,*)'ERROR. HCONV not available in this version'
-        WRITE(3,*)'ERROR. HCONV not available in this version'
+        WRITE(0,*)'ERROR. HCONV not available in this version'
+c        WRITE(3,*)'ERROR. HCONV not available in this version'
         STOP
       ENDIF
 
-	backspace(iunit)
+c	backspace(iunit)
 c	read(iunit,*)nll,pm
-	read(iunit,*)
-
-	call m_control(nll,pm)
-	m=nll
-	if(pm.ne.0) m=nll+1
+c	read(iunit,*)
+c	call m_control(nll,pm)
 c
 	if(connect) allocate(convep(m,m),convap(m),vcon(m*(m+1)/2))
 C--MQL
@@ -269,77 +270,94 @@ c       allocate(q(m,3),q0(m,3),p(m,3),qf(m,3)) Group
         allocate(ip(m),ipf(m),ivecs(m),ivecs0(m))
 	allocate(ctrl(m))
 c Lectura del fitxer de la permutacio
-        if(permu) then
-         open(unit=55,file=trim(input)//".zper",status='unknown')
-	 write(3,"('Reading permutation from file ',a)") trim(input)//'.zper'
-       write(3,"('Only operation measure when permutation is fixed')") ! Group
-         read(55,*)(ipf(j),j=1,5)
-         close(55)
-        end if
+c       if(permu) then
+c         open(unit=55,file=trim(input)//".zper",status='unknown')
+c         write(0,"('Reading permutation from file ',a)") trim(input)//'.zper'
+c         write(0,"('Only operation measure when permutation is fixed')") ! Group
+c         read(55,*)(ipf(j),j=1,5)
+c         close(55)
+c        end if
+
+
+c Coordinates assignation
+      kka = 1
+      do kk = 1,nll
+        if (kka.eq.pm) kka = kka + 1
+	    etiq0(kk) = symbols(kka)
+	    q0(kk,:) = coordinates(kka,:)
+	    kka = kka + 1
+      enddo
+      if (pm.ne.0) then
+        etiq0(nll+1) = symbols(pm)
+	    q0(nll+1,:) = coordinates(pm,:)
+      endif
+      atfix = .FALSE.
+      rfix = .FALSE.
+
 c------------------------
 c Lectura de l'operacio
 c------------------------
-	call nextline(iunit)
-	read(1,"(a)") line
-      oper = oper_2
+c	call nextline(iunit)
+c	read(1,"(a)") line
+c      oper = oper_2
 
         IF((oper.ne.'e').and.(oper.ne.'i').and.(oper.ne.'r')
      &.and.(oper.ne.'c').and.(oper.ne.'s')) THEN
-       write(3,"(/,'ERROR. This is not a defined symmetry operation')")
+       write(0,"(/,'ERROR. This is not a defined symmetry operation')")
 	    stop
 	  ENDIF
-	line(1:1)=' '
-	line=adjustl(line)
-	k=0
-      if ((atfix).or.(rfix)) then
-	 do i=1,len_trim(line)
-	  if (line(i:i).eq.'(') k=i
-	  if (line(i:i).eq.')') kk=i
-	  if (line(i:i).eq.',') line(i:i)=' '
-	 end do
-	 IF(k.eq.0) THEN
-         write(3,"(/,'ERROR. Character ( not found')")
-	   stop
-	 ENDIF
+c	line(1:1)=' '
+c	line=adjustl(line)
+c	k=0
+c      if ((atfix).or.(rfix)) then
+c	 do i=1,len_trim(line)
+c	  if (line(i:i).eq.'(') k=i
+c	  if (line(i:i).eq.')') kk=i
+c	  if (line(i:i).eq.',') line(i:i)=' '
+c	 end do
+c	 IF(k.eq.0) THEN
+c        write(0,"(/,'ERROR. Character ( not found')")
+c	   stop
+c	 ENDIF
 	 if(atfix) then
-	  ctrl_nvecs=.true.
-	  do i=k+1,kk-1
-	   if((ctrl_nvecs).and.(line(i:i).ne.' ')) nvecs=nvecs+1
-	   IF (nvecs.gt.m) THEN
-           write(3,"(/,'ERROR. Too many atoms to fix the axis')")
-	     stop
-	   ENDIF
-	   ctrl_nvecs=(line(i:i).eq.' ')
-	  end do
+c	  ctrl_nvecs=.true.
+c	  do i=k+1,kk-1
+c	   if((ctrl_nvecs).and.(line(i:i).ne.' ')) nvecs=nvecs+1
+c	   IF (nvecs.gt.m) THEN
+c           write(0,"(/,'ERROR. Too many atoms to fix the axis')")
+c	     stop
+c	   ENDIF
+c	   ctrl_nvecs=(line(i:i).eq.' ')
+c	  end do
 	  IF (nvecs.eq.0) THEN
-          write(3,"(/,'ERROR. There is no atoms to fix the axis')")
+          write(0,"(/,'ERROR. There is no atoms to fix the axis')")
 	    stop
 	  ENDIF
 	  IF((oper.eq.'r').and.(nvecs.gt.2)) THEN
-           write(3,"(/,'ERROR: Bad fixed plane definition')")
+           write(0,"(/,'ERROR: Bad fixed plane definition')")
 	     stop
 	  ENDIF
 	 end if
- 	 line(k:k)=' '
- 	 line(kk:)=' '
-	 if(oper.eq.'r') then
-	  if(atfix) read(line,*)(ivecs0(j),j=1,nvecs)
-        if(rfix) read(line,*)(vmax(j),j=1,3)
-	 elseif ((oper.eq.'c').or.(oper.eq.'s')) then
-	  if(atfix) read(line,*)oeix,(ivecs0(j),j=1,nvecs)
-	  if(rfix) read(line,*)oeix,(vmax(j),j=1,3)
-	 end if
-	elseif((oper.eq.'c').or.(oper.eq.'s')) then
+c 	 line(k:k)=' '
+c 	 line(kk:)=' '
+c	 if(oper.eq.'r') then
+c	  if(atfix) read(line,*)(ivecs0(j),j=1,nvecs)
+c        if(rfix) read(line,*)(vmax(j),j=1,3)
+c	 elseif ((oper.eq.'c').or.(oper.eq.'s')) then
+c	  if(atfix) read(line,*)oeix,(ivecs0(j),j=1,nvecs)
+c	  if(rfix) read(line,*)oeix,(vmax(j),j=1,3)
+c	 end if
+c	elseif((oper.eq.'c').or.(oper.eq.'s')) then
 c	 read(line,'(i2)')oeix
-	 read(line,'(i2)')
-	end if
-      oeix = oeix_2
-      write(6,*) 'oeix',oeix
+c	 read(line,'(i2)')
+c	end if
+c      oeix = oeix_2
+c      write(6,*) 'oeix',oeix
 c Control atfix definition
 	IF (atfix) THEN
         DO i = 1,nvecs
 	    IF (ivecs0(i).GT.m) THEN
-	      WRITE(3,"(/,'ERROR: Bad atom definition in ATFIX')")
+	      WRITE(0,"(/,'ERROR: Bad atom definition in ATFIX')")
 	      STOP
 	    ENDIF
 	  ENDDO
@@ -351,27 +369,27 @@ c Control atfix definition
 
 C--MQL --
       IF ((oper.eq.'c'.or.oper.eq.'s').and.oeix.gt.90) THEN
-        write(3,"(/,'ERROR. Invalid axis order value')")
+        write(0,"(/,'ERROR. Invalid axis order value')")
         stop
       END IF
 C--MQL --/
 c
-	open(unit=2,file=trim(input)//".ztab",status='unknown')
-	open(unit=3,file=trim(input)//".zout",status='unknown')
+c	open(unit=2,file=trim(input)//".ztab",status='unknown')
+c	open(unit=3,file=trim(input)//".zout",status='unknown')
 c	write(3,"('Writing output files ',a,a)") trim(input)/
 c    .  /'.ztab and ',trim(input)//'.zout'
-	if (multi) then
-	 open(unit=4,file=trim(input)//".zout2",status='unknown')
-	 write(3,"('Writing multiple values to file ',a)") trim(input)
-     &   //'.zout2'
+c	if (multi) then
+c	 open(unit=4,file=trim(input)//".zout2",status='unknown')
+c	 write(3,"('Writing multiple values to file ',a)") trim(input)
+c     &   //'.zout2'
 C--MQL --
-	 write(4,'(a)') trim(title)
+c	 write(4,'(a)') trim(title)
 C--MQL --/
-       write(4,*)' '
-	 write(4,*)'**************************************'
-	end if
-      write(2,'(a)') trim(title)
-      write(3,'(a)') trim(title)
+c       write(4,*)' '
+c	 write(4,*)'**************************************'
+c	end if
+c      write(2,'(a)') trim(title)
+c      write(3,'(a)') trim(title)
 
 c Allocate some space
       IF ((oper.eq.'c').or.(oper.eq.'s')) noper = oeix-1
@@ -383,16 +401,16 @@ c Write some file header
 	line='                                                     '
 	IF (oper.eq.'e') THEN
 	  i_oper = 0
-	  WRITE(2,800)
-	  WRITE(3,800)
+c	  WRITE(2,800)
+c	  WRITE(3,800)
 	ELSEIF (oper.eq.'i') THEN
 	  i_oper = 1
-        WRITE(2,810)
-        WRITE(3,810)
+c        WRITE(2,810)
+c        WRITE(3,810)
 	ELSEIF (oper.eq.'r') THEN
 	  i_oper = 2
-        WRITE(2,820)
-        WRITE(3,820)
+c        WRITE(2,820)
+c        WRITE(3,820)
 	  IF ((atfix).or.(rfix)) THEN
 	    theta(1)  =  2.0d0*pi
           ctheta(1) =  1.0d0
@@ -407,24 +425,24 @@ c Write some file header
           stheta(l) = sin(theta(l))
 	  ENDDO
 	  IF (oper.eq.'c') THEN
-	    IF (dim2D) THEN
-	      write(2,830) trim(fit(oeix))
-	      write(3,830) trim(fit(oeix))
-	    ELSE
-	      write(2,840) trim(fit(oeix))
-	      write(3,840) trim(fit(oeix))
-	    ENDIF
+c	    IF (dim2D) THEN
+c	      write(2,830) trim(fit(oeix))
+c	      write(3,830) trim(fit(oeix))
+c	    ELSE
+c	      write(2,840) trim(fit(oeix))
+c	      write(3,840) trim(fit(oeix))
+c	    ENDIF
 	    DO l = 1,noper
             ttheta(l) = 1.0d0-ctheta(l)
 	    ENDDO
         ELSE
-          if (dim2D) then
-            write(2,850) trim(fit(oeix))
-            write(3,850) trim(fit(oeix))
-          else
-            write(2,860) trim(fit(oeix))
-            write(3,860) trim(fit(oeix))
-          end if
+c          if (dim2D) then
+c            write(2,850) trim(fit(oeix))
+c            write(3,850) trim(fit(oeix))
+c          else
+c            write(2,860) trim(fit(oeix))
+c            write(3,860) trim(fit(oeix))
+c          end if
           DO l = 1,noper
             ttheta(l) = (-1.0d0)**l-ctheta(l)
           ENDDO
@@ -434,13 +452,13 @@ c Write some file header
 c
 	if((atfix).or.(rfix)) then
 	 i_oper=4
-	 write(2,*)'(Fixed Orientation)'
-	 write(3,*)'(Fixed Orientation)'
+c	 write(2,*)'(Fixed Orientation)'
+c	 write(3,*)'(Fixed Orientation)'
 	end if
 c
-	write(2,*)' '
-	write(2,870)
-	write(3,"(/,'**************************************')")
+c	write(2,*)' '
+c	write(2,870)
+c	write(3,"(/,'**************************************')")
 
  800	format('Identity Measures')
  810  format('Inversion Measures')
@@ -454,74 +472,80 @@ c
 c-------------------------------------------------------
 c Farem el calcul per les diferents estructures distorsionades
 c
-	IF (csd) THEN
-  	  iunit=11
-	  open(unit=iunit,status='old',file=trim(input)//".cor")
-	  write(3,"('Reading data from file ',a)") trim(input)//'.cor'
-	ENDIF
+c	IF (csd) THEN
+c  	  iunit=11
+c	  open(unit=iunit,status='old',file=trim(input)//".cor")
+c	  write(3,"('Reading data from file ',a)") trim(input)//'.cor'
+c	ENDIF
 c-------------------------------------------------------
-	STRUCTURES: do es=1,9999999
 
-	 call nextline(iunit)
-	 read(iunit,"(a)",end=11, IOSTAT=iostat) name
-	 if (iostat.gt.0) exit
- 	 write(3,'(a10)') name
-	 write(3,*)' '
-	 ivecs(:)=ivecs0(:)
-	 k=0
-	if(atfix) then
-         do j=1,nvecs
-          if(ivecs(j).eq.pm) ivecs(j)=m
-         end do
-	end if
-	 do i=1,m
-	  if (i.eq.pm) then
-	   call nextline(iunit)
-	   if(nolabel)then
-	    read(iunit,*)(q0(m,j),j=1,3)
-	   else
-	    read(iunit,"(a)")line
-            line=adjustl(line)
-            l=index(line,' ')
-	    etiq0(m)=line(1:l)
-	    line(1:l)=' '
-	    read(line,*)(q0(m,j),j=1,3)
-	   end if
-	  else
-	   k=k+1
-           call nextline(iunit)
-	   if(nolabel)then
-            read(iunit,*)(q0(k,j),j=1,3)
-           else
-	    read(iunit,"(a)")line
-            line=adjustl(line)
-            l=index(line,' ')
-            etiq0(k)=line(1:l)
-            line(1:l)=' '
-            read(line,*)(q0(k,j),j=1,3)
-	    if (atfix) then
-	     do j=1,nvecs
-	      if(ivecs(j).eq.i) ivecs(j)=k
-	     end do
-	    end if
-	   end if
-	  end if
-	 end do
+c	STRUCTURES: do es=1,9999999
+	STRUCTURES: do es=1,1
+
+c	 call nextline(iunit)
+c	 read(iunit,"(a)",end=11, IOSTAT=iostat) name
+c	 if (iostat.gt.0) exit
+c 	 write(3,'(a10)') name
+c	 write(3,*)' '
+c	 ivecs(:)=ivecs0(:)
+c	 k=0
+c	if(atfix) then
+c         do j=1,nvecs
+c          if(ivecs(j).eq.pm) ivecs(j)=m
+c         end do
+c	end if
+c	 do i=1,m
+c	  if (i.eq.pm) then
+c	   write(6,*) 'pm', pm
+c	   call nextline(iunit)
+c	   if(nolabel)then
+c	    read(iunit,*)(q0(m,j),j=1,3)
+c	   else
+c	    read(iunit,"(a)")line
+c            line=adjustl(line)
+c            l=index(line,' ')
+c	    etiq0(m)=line(1:l)
+c	    line(1:l)=' '
+c	    read(line,*)(q0(m,j),j=1,3)
+c	   end if
+c	  else
+c	   k=k+1
+c           call nextline(iunit)
+c	   if(nolabel)then
+c            read(iunit,*)(q0(k,j),j=1,3)
+c           else
+c	    read(iunit,"(a)")line
+c            line=adjustl(line)
+c            l=index(line,' ')
+c            etiq0(k)=line(1:l)
+c            line(1:l)=' '
+c            read(line,*)(q0(k,j),j=1,3)
+c	    if (atfix) then
+c	     do j=1,nvecs
+c	      if(ivecs(j).eq.i) ivecs(j)=k
+c	     end do
+c	    end if
+c	   end if
+c	  end if
+c	 end do
+
+c      write(6,*)  es
+c
 c
 c   Coloquem la molecula al centre de masses
 c
 	 call cmasses(q0,q,m,centerfix)
-	 write(3,*)'Centered structure'
-	 if(nolabel) then
-	  do i=1,m
-	   write(3,"(11x,f9.5,2x,f9.5,2x,f9.5)")(q(i,j),j=1,3)
-	  end do
-	 else
-	  do i=1,m
-           write(3,"(1x,a8,2x,f9.5,2x,f9.5,2x,f9.5)")etiq0(i),
-     .    (q(i,j),j=1,3)
-	  end do
-	 end if
+c	 write(3,*)'Centered structure'
+c	 if(nolabel) then
+c	  do i=1,m
+c	   write(3,"(11x,f9.5,2x,f9.5,2x,f9.5)")(q(i,j),j=1,3)
+c	  end do
+c	 else
+c	  do i=1,m
+c           write(3,"(1x,a8,2x,f9.5,2x,f9.5,2x,f9.5)")etiq0(i),
+c     .    (q(i,j),j=1,3)
+c	  end do
+c	 end if
 c
 c CONECTIVITAT
 c
@@ -529,18 +553,18 @@ c
 	 call connectivity(m,etiq0,q,vcon)
 C--MQL --
 c Escriptura
-	 write(3,"(/2x,'Connectivity matrix')")
-         do ic1=1,m,8
-           ic2=min(m,ic1+7)
-	   write(3,"(/17x,8(i4,4x))") (j,j=ic1,ic2)
-           write(3,"(17x,8(a8))") etiq0(ic1:ic2)
-	   do i=ic1,m
-             kk=((i+1)*i)/2-1
-             kc1=kk+ic1
-             kc2=kk+min(ic2,i)
-	     write(3,"(1x,i7,1x,a8,8(2x,i1,5x))")i,etiq0(i),int(vcon(kc1:kc2))
-	   end do
-         enddo
+c	 write(3,"(/2x,'Connectivity matrix')")
+c         do ic1=1,m,8
+c           ic2=min(m,ic1+7)
+c	   write(3,"(/17x,8(i4,4x))") (j,j=ic1,ic2)
+c           write(3,"(17x,8(a8))") etiq0(ic1:ic2)
+c	   do i=ic1,m
+c             kk=((i+1)*i)/2-1
+c             kc1=kk+ic1
+c             kc2=kk+min(ic2,i)
+c	     write(3,"(1x,i7,1x,a8,8(2x,i1,5x))")i,etiq0(i),int(vcon(kc1:kc2))
+c	   end do
+c         enddo
 C--MQL --/
 	 call jacobi(vcon,m,convap,convep,6)
 	end if
@@ -565,11 +589,11 @@ c
 	  dvmax=dvmax/dsqrt(q(ivecs(2),1)**2+
      .    q(ivecs(2),2)**2+q(ivecs(2),3)**2)
 	  if(abs(1.0d0-abs(dvmax)).lt.1.0d-6) then
-           write(2,"(1x,a8,
+           write(0,"(1x,a8,
      .   2x,'ERROR. Aligned vertices do not define a plane')") name
-           write(3,*)' '
-           write(3,*)'ERROR. Non planar structure'
-           write(3,*)'**************************************'
+c           write(0,*)' '
+c           write(0,*)'ERROR. Non planar structure'
+c           write(0,*)'**************************************'
 	   goto 11
  	  else
 	   vmax(1)=q(ivecs(1),2)*q(ivecs(2),3)-
@@ -592,10 +616,10 @@ c----------------------------------
         if (dim2D) then
          call vecnormal(q,m,vecnorm,pla_ctrl)
          if (.not.pla_ctrl) then
-	  write(2,"(1x,a8,2x,'ERROR. Non planar structure')") name
-	  write(3,*)' '
-          write(3,*)'ERROR. Non planar structure'
-	  write(3,*)'**************************************'
+	  write(0,"(1x,a8,2x,'ERROR. Non planar structure')") name
+c	  write(3,*)' '
+c          write(3,*)'ERROR. Non planar structure'
+c	  write(3,*)'**************************************'
           goto 11
          end if
 	 if((oper.eq.'c').or.(oper.eq.'s')) vmax(:)=vecnorm(:)
@@ -604,9 +628,9 @@ c----------------------------------
         if (i_oper.eq.4) then
          dvmax=vmax(1)**2+vmax(2)**2+vmax(3)**2
          if(dvmax.lt.1.d-6) then
-          write(3,*)'ERROR. Bad fixed axis definition'
-          write(3,*)'Defined vector length equal zero'
-	  write(2,"(1x,a8,5x,'ERROR. Bad fixed axis definition')") name
+          write(0,*)'ERROR. Bad fixed axis definition'
+          write(0,*)'Defined vector length equal zero'
+c         write(0,"(1x,a8,5x,'ERROR. Bad fixed axis definition')") name
           cycle STRUCTURES
          end if
          vmax(:)=vmax(:)/dsqrt(dvmax)
@@ -685,28 +709,28 @@ C--MQL
             anpmtt=anpmtt*ih
           enddo
         endif
-        if (.not.mute) write(3,"(/'Sets of equivalent points: ',i3)") ncon
-        write(3,"(/'Sets of equivalent points')")
+c        if (.not.mute) write(3,"(/'Sets of equivalent points: ',i3)") ncon
+c        write(3,"(/'Sets of equivalent points')")
         do ikc=maxval(kcon(:ncon)),1,-1
           nkc=count(kcon(:ncon).eq.ikc)
           if (nkc.ne.0) then
-            write(3,"('Sets of ',i4,' points :',i3)") ikc, nkc
+c            write(3,"('Sets of ',i4,' points :',i3)") ikc, nkc
             iapl=0
             do icon=1,ncon
               if (kcon(icon).eq.ikc) then
-                write(3,"(' |',100i4)",advance='no') jcon(icon,1:ikc)
+c                write(3,"(' |',100i4)",advance='no') jcon(icon,1:ikc)
                 iapl=iapl+ikc
                 if (iapl+ikc.gt.13) then
-                  write(3,"(' |')")
+c                  write(3,"(' |')")
                   iapl=0
                 endif
               endif
             enddo
-            if (iapl.ne.0) write(3,"(' |')")
+c            if (iapl.ne.0) write(3,"(' |')")
           endif
         enddo
-        if (.not.mute)
-     $ write(3,"('Number of predicted permutations',g10.2)") anpmtt
+c        if (.not.mute)
+c     $ write(3,"('Number of predicted permutations',g10.2)") anpmtt
 c    $ write(3,"(/'Number of predicted permutations',g10.2)") anpmtt
         ktim=0
         khg=huge(khg)
@@ -718,6 +742,7 @@ c    $ write(3,"(/'Number of predicted permutations',g10.2)") anpmtt
         kpct0=0
         call system_clock (icl_ini,icl_rat,icl_top)
 C--MQL ///
+
       PERMUT: do while (idc.ne.-1)
 c
       ip(idc)=ip(idc)+1
@@ -822,28 +847,28 @@ C--MQL
           cl_seg=(anpmtt*icl_stp/icl_rat)/100.d0
           cl_hor=cl_seg/3600.d0
           cl_dia=cl_hor/24.d0
-          if (.not.mute) then
-           if (cl_dia.gt.1.d0) then
-       write(3,"(/'Estimated calculation time ',g9.2,' days')") cl_dia
-       write(3,"('** WARNING ** Time larger than 1 day')")
-           elseif (cl_hor.gt.1.d0) then
-       write(3,"(/'Estimated calculation time ',f8.3,' hours')") cl_hor
-       write(3,"('** WARNING ** Time larger than 1 hour')")
-           else
-            write(3,"(/'Estimated calculation time ',
-     &            f8.3,' seconds')") cl_seg
-           endif
+c          if (.not.mute) then
+c           if (cl_dia.gt.1.d0) then
+c       write(3,"(/'Estimated calculation time ',g9.2,' days')") cl_dia
+c       write(3,"('** WARNING ** Time larger than 1 day')")
+c           elseif (cl_hor.gt.1.d0) then
+c       write(3,"(/'Estimated calculation time ',f8.3,' hours')") cl_hor
+c       write(3,"('** WARNING ** Time larger than 1 hour')")
+c           else
+c            write(3,"(/'Estimated calculation time ',
+c     &            f8.3,' seconds')") cl_seg
+c           endif
 c DCC: this version allways runs
 c           if (cl_seg.gt.300) then
 c             write(3,"('Continue (y/n) ? ')",advance='no')
 c             read(5,*) yn
 c             if (yn.ne.'y') stop "Aborted calculation"
 c           endif
-            if (anpmtt.gt.apmt(4)*khg) write(3,
-     &"(/'** WARNING ** Dot counter will stop before the end')")
-          endif
-          ktim=1
-          call system_clock (icl_ini,icl_rat,icl_top)
+c            if (anpmtt.gt.apmt(4)*khg) write(3,
+c     &"(/'** WARNING ** Dot counter will stop before the end')")
+c          endif
+c          ktim=1
+c          call system_clock (icl_ini,icl_rat,icl_top)
        endif
        if (ktim.ne.3) then
           npmt(1)=npmt(1)+1
@@ -859,9 +884,9 @@ c           endif
             if (npmt(4).eq.khg) then
             ktim=3
             if (.not.mute) then
-             write(3,"(/'** WARNING ** Permutation number too large.')")
-             write(3,"( '           ** Counter stopped.')")
-             write(3,"( '           ** Program is running.')")
+             write(0,"(/'** WARNING ** Permutation number too large.')")
+             write(0,"( '           ** Counter stopped.')")
+             write(0,"( '           ** Program is running.')")
             endif
             endif
             endif
@@ -870,11 +895,11 @@ c           endif
           anpmt=sum(npmt(:)*apmt(:))
           kpct=int(50.0d0*anpmt/anpmtt)
           if (ktim.eq.1) then
-           if (.not.mute) write(3,"(1a)") repeat('_',50)
+           if (.not.mute) write(0,"(1a)") repeat('_',50)
            ktim=2
           endif
           if (.not.mute.and.ktim.eq.2.and.kpct.ne.kpct0)
-     $     write(3,"(1a)",advance='no') '.'
+     $     write(0,"(1a)",advance='no') '.'
           kpct0=kpct
         endif
 C--MQL ///
@@ -907,21 +932,21 @@ c Renew optimum value
        enddo PERMUT
 
 C--MQL
-      if (ktim.ne.3) then
-        if (npmt(2).eq.0) then
+c      if (ktim.ne.3) then
+c        if (npmt(2).eq.0) then
 c         if (.not.mute) write(6,"(//'Number of permutations done',i20)") npmt(1)
-         write(3,"('Number of permutations done',i20)") npmt(1)
+c         write(3,"('Number of permutations done',i20)") npmt(1)
 c        write(3,"(/'Number of permutations done',i20)") npmt(1)
-        else
+c        else
 c         if (.not.mute) write(6,"(//'Number of permutations done',g8.2)") anpmt
-         write(3,"('Number of permutations done',g8.2)") anpmt
-        endif
-      endif
+c         write(3,"('Number of permutations done',g8.2)") anpmt
+c        endif
+c      endif
       if (ktim.gt.0) then
         sec_max=1.d0*icl_top/icl_rat
         if (cl_seg.gt.sec_max*0.9d0) then
 c         if (.not.mute) write(6,"(/'Real calculation time > 1 day')")
-          write(3,"(/'Real calculation time > 1 day')")
+          write(0,"(/'Real calculation time > 1 day')")
         else
           call system_clock (icl_end,icl_rat,icl_top)
           icl_tot=icl_end-icl_ini
@@ -931,10 +956,10 @@ c         if (.not.mute) write(6,"(/'Real calculation time > 1 day')")
           cl_dia=cl_hor/24.d0
           if (cl_seg.lt.1000.d0) then
 c           if (.not.mute) write(6,"(/'Real calculation time ',f10.4,' seconds')") cl_seg
-            write(3,"(/'Real calculation time ',f10.4,' seconds')") cl_seg
+            write(0,"(/'Real calculation time ',f10.4,' seconds')") cl_seg
           else
 c           if (.not.mute) write(6,"(/'Real calculation time ',f10.4,' hours')") cl_hours
-            write(3,"(/'Real calculation time ',f10.4,' hours')") cl_hours
+            write(0,"(/'Real calculation time ',f10.4,' hours')") cl_hours
           endif
         endif
 c        call system('date')
@@ -945,10 +970,10 @@ c----------------------------------
 c Escriptura estructura final
 c
 C--MQL
-      write(3,"('Optimal permutation')")
-      do im=1,nll
-        write(3,"(2i5)") im, ipf(im)
-      enddo
+c      write(3,"('Optimal permutation')")
+c      do im=1,nll
+c        write(3,"(2i5)") im, ipf(im)
+c      enddo
 c     write(3,"(/)")
 C--MQL ///
 
@@ -970,13 +995,13 @@ c Group
 c       write(3,*)'Inverted structure'
 c       qf(:,:)=-p(1,:,:)
 c Group
-        write(3,*)'Nearest Ci Structure'
+c        write(3,*)'Nearest Ci Structure'
         qf(:,:)=0.5d0*(q(:,:)-ptotal(1,:,:))
 	ELSEIF (oper.eq.'r') THEN
 c       write(3,*)'Reflected structure'
 c       call reflexio(p,m,vmax,qf)
 c Group
-        write(3,*)'Nearest Cs Structure'
+c        write(3,*)'Nearest Cs Structure'
         call reflexio(ptotal,m,vmax,qf)
         qf(:,:)=0.5d0*(q(:,:)+qf(:,:))
 	ELSEIF ((oper.eq.'c').or.(oper.eq.'s')) THEN
@@ -984,44 +1009,44 @@ c Group
 c	  call rotacio(p,m,vmax,qf)
         call rotacio(ptotal,oeix,m,vmax,qf,ctheta,stheta,ttheta)
         qf(:,:)=(qf(:,:)+q(:,:))/dfloat(oeix)
-	  IF (oper.eq.'c') THEN
+c	  IF (oper.eq.'c') THEN
 c Group
 c         write(3,*)'Rotated structure'
-          write(3,"('Nearest C',i2,1x,'structure')") oeix
-	  ELSE
+c          write(3,"('Nearest C',i2,1x,'structure')") oeix
+c	  ELSE
 c Group
 c         write(3,*)'Rotated and reflected structure'
-          write(3,"('Nearest S',i2,1x,'structure')") oeix
-	  ENDIF
+c          write(3,"('Nearest S',i2,1x,'structure')") oeix
+c	  ENDIF
 	ENDIF
 c
-	if (oper.ne.'e') then
-	 do k=1,m
-	  if(nolabel) then
-	   write(3,"(11x,f9.5,2x,f9.5,2x,f9.5)")(qf(k,j),j=1,3)
-	  else
-	   write(3,"(1x,a8,2x,f9.5,2x,f9.5,2x,f9.5)")etiq(k),
-     .    (qf(k,j),j=1,3)
-	  end if
-	 end do
-         write(3,*)' '
-	end if
+c	if (oper.ne.'e') then
+c	 do k=1,m
+c	  if(nolabel) then
+c	   write(3,"(11x,f9.5,2x,f9.5,2x,f9.5)")(qf(k,j),j=1,3)
+c	  else
+c	   write(3,"(1x,a8,2x,f9.5,2x,f9.5,2x,f9.5)")etiq(k),
+c     .    (qf(k,j),j=1,3)
+c	  end if
+c	 end do
+c         write(3,*)' '
+c	end if
 c
-	if (i_oper.eq.2) then
-         write(3,*)'Normal vector to the optimum reflection plane'
-        end if
-        if (i_oper.eq.3) then
-          write(3,*)'Optimum axis orientation'
-        end if
-        if (i_oper.eq.4) then
-          write(3,*)'Fixed axis orientation'
-        end if
+c	if (i_oper.eq.2) then
+c         write(3,*)'Normal vector to the optimum reflection plane'
+c        end if
+c        if (i_oper.eq.3) then
+c          write(3,*)'Optimum axis orientation'
+c        end if
+c        if (i_oper.eq.4) then
+c          write(3,*)'Fixed axis orientation'
+c        end if
 
 	IF ((i_oper.eq.2).or.(i_oper.eq.3).or.
      $   (i_oper.eq.4))then
-	 write(3,"(3(2x,f9.5))") (vmax(j),j=1,3)
+c	 write(3,"(3(2x,f9.5))") (vmax(j),j=1,3)
 C--MQL
-        write(3,"(/1x,'Reference axis')")
+c        write(3,"(/1x,'Reference axis')")
         hz=-(vmax(1)+vmax(2))/vmax(3)
         hx=1.d0/sqrt(2.d0+hz*hz)
         hy=hx
@@ -1029,10 +1054,10 @@ C--MQL
         h2x=vmax(2)*hz-vmax(3)*hy
         h2y=vmax(3)*hx-vmax(1)*hz
         h2z=vmax(1)*hy-vmax(2)*hx
-        write(3,"(1x,'X',7x,3(2x,f9.5))") 0.d0, 0.d0, 0.d0
-        write(3,"(1x,'X',7x,3(2x,f9.5))") hx, hy, hz
-        write(3,"(1x,'X',7x,3(2x,f9.5))") h2x, h2y, h2z
-        write(3,"(1x,'X',7x,3(2x,f9.5))") (vmax(j),j=1,3)
+c        write(3,"(1x,'X',7x,3(2x,f9.5))") 0.d0, 0.d0, 0.d0
+c        write(3,"(1x,'X',7x,3(2x,f9.5))") hx, hy, hz
+c        write(3,"(1x,'X',7x,3(2x,f9.5))") h2x, h2y, h2z
+c        write(3,"(1x,'X',7x,3(2x,f9.5))") (vmax(j),j=1,3)
 C--MQL ///
 	ENDIF
 
@@ -1045,10 +1070,10 @@ c	s_max=50.0d0*(1.0d0-s_max/A)
 	  s_max = 100.0d0 * (1.0d0-s_max)
 	ENDIF
 
- 	write(2,"(1x,a10,',',2x,f9.5)") name,s_max
-	write(3,*)' '
-	write(3,"(1x,'Symmetry measure',2x,f14.8)") s_max
-	write(3,*)'**************************************'
+c 	write(2,"(1x,a10,',',2x,f9.5)") name,s_max
+c	write(3,*)' '
+c	write(3,"(1x,'Symmetry measure',2x,f14.8)") s_max
+c	write(3,*)'**************************************'
 C--MQL
         if (multi) then
 C--MQL ///
@@ -1061,44 +1086,44 @@ C--MQL ///
          sm(i) = 100.0d0 * (1.0d0-sm(i))
        ENDIF
 	ENDDO
-	write(4,'(1x,a10)') name
-	write(4,*)' '
-	if (Nmulti.le.5) then
-	 write(4,"(5(2x,f9.5))")(sm(j),j=1,Nmulti)
-	 write(4,*)' '
-         do k=1,3
-          write(4,"(5(2x,f9.5))")(vm(j,k),j=1,Nmulti)
-         end do
-	else
-	 write(4,"(5(2x,f9.5))")(sm(j),j=1,5)
-         write(4,*)' '
-         do k=1,3
-          write(4,"(5(2x,f9.5))")(vm(j,k),j=1,5)
-         end do
-         write(4,*)' '
-         write(4,*)' '
-	 if (Nmulti.le.10) then
-          write(4,"(5(2x,f9.5))")(sm(j),j=6,Nmulti)
-          write(4,*)' '
-          do k=1,3
-           write(4,"(5(2x,f9.5))")(vm(j,k),j=6,Nmulti)
-          end do
-	 else
-          write(4,"(5(2x,f9.5))")(sm(j),j=6,10)
-          write(4,*)' '
-          do k=1,3
-           write(4,"(5(2x,f9.5))")(vm(j,k),j=6,10)
-          end do
-          write(4,*)' '
-          write(4,*)' '
-          write(4,"(5(2x,f9.5))")(sm(j),j=11,Nmulti)
-          write(4,*)' '
-          do k=1,3
-           write(4,"(5(2x,f9.5))")(vm(j,k),j=11,Nmulti)
-          end do
-	 end if
-	end if
-        write(4,*)'**************************************'
+c	write(4,'(1x,a10)') name
+c	write(4,*)' '
+c	if (Nmulti.le.5) then
+c	 write(4,"(5(2x,f9.5))")(sm(j),j=1,Nmulti)
+c	 write(4,*)' '
+c         do k=1,3
+c          write(4,"(5(2x,f9.5))")(vm(j,k),j=1,Nmulti)
+c         end do
+c	else
+c	 write(4,"(5(2x,f9.5))")(sm(j),j=1,5)
+c         write(4,*)' '
+c         do k=1,3
+c          write(4,"(5(2x,f9.5))")(vm(j,k),j=1,5)
+c         end do
+c         write(4,*)' '
+c         write(4,*)' '
+c	 if (Nmulti.le.10) then
+c          write(4,"(5(2x,f9.5))")(sm(j),j=6,Nmulti)
+c          write(4,*)' '
+c          do k=1,3
+c           write(4,"(5(2x,f9.5))")(vm(j,k),j=6,Nmulti)
+c          end do
+c	 else
+c          write(4,"(5(2x,f9.5))")(sm(j),j=6,10)
+c          write(4,*)' '
+c          do k=1,3
+c           write(4,"(5(2x,f9.5))")(vm(j,k),j=6,10)
+c          end do
+c          write(4,*)' '
+c          write(4,*)' '
+c          write(4,"(5(2x,f9.5))")(sm(j),j=11,Nmulti)
+c          write(4,*)' '
+c          do k=1,3
+c           write(4,"(5(2x,f9.5))")(vm(j,k),j=11,Nmulti)
+c          end do
+c	 end if
+c	end if
+c        write(4,*)'**************************************'
 C--MQL
         endif
 C--MQL ///
@@ -1112,18 +1137,45 @@ C--MQL --
    11   if (.not.mute) write(3,*)' '
 C--MQL --
 
- 10   write(3,"(/,' *** Normal Termination ***')")
-      write(3,*)' '
-      write(3,*)' Thank you for using SYMGROUP '
-      write(3,*)' '
+c 10   write(3,"(/,' *** Normal Termination ***')")
+c      write(3,*)' '
+c      write(3,*)' Thank you for using SYMGROUP '
+c      write(3,*)' '
 
-      close(2)
-      close(3)
-   	if (multi) close(4)
-	if (csd) close(11)
-c
- 9999 close(1)
-   	END
+c      close(2)
+c      close(3)
+c   	if (multi) close(4)
+c	if (csd) close(11)
+c Recolecta outputs
+
+      iOff = 0
+      do i =1, m
+        if (i.eq.pm) then
+          NearStruc(i,:) = qf(m, :)
+          iOff = -1
+        else
+          NearStruc(i,:) = qf(i+iOff, :)
+        endif
+      enddo
+      v_max = vmax
+
+      do i=1,nll
+        optper(i) = ipf(i)
+      enddo
+
+      refAxis(1,:) = (/0.d0, 0.d0, 0.d0/)
+      refAxis(2,:) = (/hx, hy, hz/)
+      refAxis(3,:) = (/h2x, h2y, h2z/)
+      refAxis(4,:) = vmax(:)
+
+c      write(3,"(1x,'X',7x,3(2x,f9.5))") 0.d0, 0.d0, 0.d0
+c      write(3,"(1x,'X',7x,3(2x,f9.5))") hx, hy, hz
+c      write(3,"(1x,'X',7x,3(2x,f9.5))") h2x, h2y, h2z
+c      write(3,"(1x,'X',7x,3(2x,f9.5))") (vmax(j),j=1,3)
+c      sm, vm
+
+c 9999 close(1)
+ 9999 END
 
 
 
@@ -1866,16 +1918,16 @@ c
 	m=nll
         if(pm.ne.0) m=nll+1
         if (m.lt.3) then
-         write(3,999)
+         write(0,999)
          stop
         end if
 	if(pm.gt.nll+1) then
-	 write(3,*)'ERROR: Not allowed value of the central atom position'
+	 write(0,*)'ERROR: Not allowed value of the central atom position'
 	 stop
 	end if
 c
 	if((permu).and.(pm.ne.0)) then
-	 write(3,*)'ERROR. Central atom is not allowed with permu'
+	 write(0,*)'ERROR. Central atom is not allowed with permu'
 	 stop
 	end if
 c
