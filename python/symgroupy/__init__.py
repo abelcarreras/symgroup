@@ -73,6 +73,13 @@ if __name__ == '__main__':
                    [4.24692, -3.22298, 22.54931],
                    [4.75958, -0.12712, 23.86630]]
 
+# Symmetry point groups available:
+    # e: identity
+    # i: inversion
+    # r: reflection
+    # cn: rotation (n:order)
+    # sn: improper rotation (n:order)
+
     fen4 = Symgroupy(coordinates=coordinates,
                      group='c3',
                      multi=8,
