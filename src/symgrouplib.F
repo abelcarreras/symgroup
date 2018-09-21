@@ -269,6 +269,15 @@ c       allocate(q(m,3),q0(m,3),p(m,3),qf(m,3)) Group
         allocate(etiq0(m),etiq(m))
         allocate(ip(m),ipf(m),ivecs(m),ivecs0(m))
 	allocate(ctrl(m))
+
+c Initialize to 0
+        do i = 1,m
+           ipf(i) = 0
+           ip(i) = 0
+           ivecs(i) = 0
+           ivecs0(i) = 0
+        enddo
+
 c Lectura del fitxer de la permutacio
 c       if(permu) then
 c         open(unit=55,file=trim(input)//".zper",status='unknown')
@@ -291,6 +300,7 @@ c Coordinates assignation
         etiq0(nll+1) = symbols(pm)
 	    q0(nll+1,:) = coordinates(pm,:)
       endif
+
       atfix = .FALSE.
       rfix = .FALSE.
 
@@ -640,8 +650,10 @@ c----------------------------------
 c----------------------------------
       IF (i_oper .EQ. 0) THEN
         s_max=A
-	  p(1,k,:)=q(ipf(k),:)  ! Group
-	ENDIF
+        p(1,nll,:)=q(ipf(nll),:)  ! Group
+        qf(:,:) = q(:,:)
+      ENDIF
+
 c----------------------------------
 c Permutacio unica
 	IF (permu) THEN
