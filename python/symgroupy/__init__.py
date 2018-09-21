@@ -6,28 +6,27 @@ import numpy as np
 
 class Symgroupy:
     def __init__(self,
-                 coordinates,
-                 group,
-                 multi=1,
-                 labels=None,
-                 central_atom=None):
+                 coordinates,  # Cartesian coordinates
+                 group,        # symmetry point group
+                 multi=1,      # multiple measures
+                 labels=None,  # atomic symbols (or other representative labels)
+                 central_atom=None):  # Atom number that contains the center atom (if exist)
 
         if central_atom is None:
-            central_atom_index = 0
-        else:
-            central_atom_index = central_atom
+            central_atom = 0
 
-        operation = b'{}'.format(group[0].lower())
+        operation = group[0].lower().encode('ascii')
         try:
             operation_axis = int(group[1])
         except IndexError:
             operation_axis = 1
 
         labels = np.array([list('{:<2}'.format(char)) for char in labels], dtype='S')
-        coordinates = np.array(coordinates, dtype='double', order='c')
+        coordinates = np.ascontiguousarray(coordinates)
 
-        outputs = symgrouplib.symgroup(coordinates, multi, labels, central_atom_index, operation, operation_axis)
+        outputs = symgrouplib.symgroup(coordinates, multi, labels, central_atom, operation, operation_axis)
 
+        # Reorganize outputs
         self._csm = outputs[0]
         self._nearest_structure = outputs[1]
         self._optimum_axis = outputs[2]
@@ -67,11 +66,11 @@ class Symgroupy:
 
 if __name__ == '__main__':
 
-    coordinates = [[5.51829, -1.68040, 22.81703],
-                   [6.78978, -3.22298, 23.08474],
-                   [6.27712, -0.12712, 21.76775],
-                   [4.24692, -3.22298, 22.54931],
-                   [4.75958, -0.12712, 23.86630]]
+    cart_coordinates = [[5.51829, -1.68040, 22.81703],
+                        [6.78978, -3.22298, 23.08474],
+                        [6.27712, -0.12712, 21.76775],
+                        [4.24692, -3.22298, 22.54931],
+                        [4.75958, -0.12712, 23.86630]]
 
 # Symmetry point groups available:
     # e: identity
@@ -80,11 +79,12 @@ if __name__ == '__main__':
     # cn: rotation (n:order)
     # sn: improper rotation (n:order)
 
-    fen4 = Symgroupy(coordinates=coordinates,
+    fen4 = Symgroupy(coordinates=cart_coordinates,
                      group='c3',
                      multi=8,
                      labels=['Fe', 'N', 'N', 'N', 'N'],
-                     central_atom=1)
+                     central_atom=1
+                     )
 
     print('CSM: {}'.format(fen4.csm))
     print('Optimum axis: {}'.format(fen4.optimum_axis))
