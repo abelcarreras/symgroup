@@ -1,8 +1,6 @@
 language: python
-
 os:
-  - linux
-
+- linux
 python:
   - "2.7"
   - "3.4"
@@ -40,7 +38,7 @@ deploy:
       distributions: sdist
       user: abelcarreras83
       password:
-         secure: "ZhfKqglYeazKQJMPzRjj0adMzNKiRPt8mBjg/G9bBZ/XuaLBRkazv/YbNfW4rirEjNr/yk2juVXytF58TajutmfeKRaUpH+0GLQ5gMCi+7xbkNBz5isrMz1+xVDN+JLVAreGjyUhZIP+/5+g7PNCXwnekdC/e9pE4JoLmuL5AE8qtHGjcR/PVc1+6wEy4x+fherblBRAcswrSDbPChFefDmeQoDcBKsvxMgrsplTcFDC5nAoANtAPW94KMYy5Fs9bZpGts3e2cqLucE/bsUtwMQe7qS76sIXKIWRUFXQ3MjNGyNwUlR8BxFYpw6ZpSK4iNN7SVydnkHwCHSLNA85bpHJ2a1VWbt5y5ywDM4XXdmxwQEwIAtYNzuTN/miCgrBZqAWdJbX2/6GZsF0KIvfyhqhDRNZb/EmJTYWI3cxDf7OjbiEpKg41Ajh/ZR7nmaDt6VwkpdbfJOAOK02O/9Qe1xdNIO9OqOP/C3BBNuEdkHVOOS9FlWUXARW/Y2se8qSSFhmYlaoqCleJ3HnwQFZyE4D83hGQy8Jz3Y7Llx7sHcufdG1iAImSzxNUwK/6UElfP6mG5ffCMGcqz3Gtao7SBZdR+8AeOYcjL9sLQKQFvk7F0MBHTEUtlYeGqbQ3px+efGCFV8GwNimm0Zc+c6kviH97XOeJU23iU/oOQhgano="
+         secure: Ym8OA8vXlVcLB9FVIf5rvYkSGHUhRvhJ9CSlSsxLbtrUFVvDjrzySKMK34pXssPbOmIkVqtHdg5lr+ljh1dstmIRxwi71urzjDaNLpfrHaN6hqninXqkfzXRD/7iekeTlWs5TO4QJjEFQUI9LKQ7KzKyT7fb4x17/H8HYSh25DBfQoYctABKuCUUV0JDYQ99IlaWo4hAbsh9fqeIEKqplIS7xX/87HKhYIjo8CPwQqit4LWMezchoz94DuWyghLPZoLJO3Hngw1t812RbsDeNWMxXVN0FO/qbC6XSQ1np4pj7bNxljbqwh/Wu3PbCHspi9swWNF9q7/VGiKIJKoHSNNd404kW33PAsO2b+pzPm5qczuePHuA7QMv2OJCyJiGJkugmv7DiJeQDi4ODtKVxdRiOr8GzZGB/WWqMrU5nWvvuKE/lbHm/h5GheNDykwoqfIPoN/2sPnMliCqX5yGIcpUHEzgmWHy7VkmZNzrVTcY3buryUHYfKOPFpeYb/up/CEo8vJx1WIS7K0S1MLc3se04M2Vh8AXwPSRQkAXy4aCQsOAU8Dn900f5Rn/bOWElsc8J86njc+jfkgEE9X0yLImRWH6TWiD1NUqCt2ErQFYp1Rio27ebYmMLK/b6JAPKfG92udqwWpRWQQchmyTHSiH8aRL8Atp5fNmVMHxRXw=
       skip_existing: true
       on:
           branch: master
