@@ -14,7 +14,7 @@ branches:
 
 notifications:
   email:
-    - komuisan@gmail.com
+#    - komuisan@gmail.com
     - abelcarreras83@gmail.com
 
 install:
@@ -40,7 +40,7 @@ deploy:
       distributions: sdist
       user: abelcarreras83
       password:
-         secure: "V8KVILKJF4pI48mtDzSyHWwuD0+XT1tY0y/po3QE90RjpVtsUHOC7/HU/ZvXt/Es0iT96c4yHO+Gucs4GqyYRV9Gqab68++BMaKaEefpgobZstnD2XQKMSJ1b23CN0AXCGu2wki644HNufUCTEyKe8p7BRv1FcjZgkPsY2hHY5snAJKv92wuL1nFPCPnjPJs6WelcNhmq48ptNAO4rIe25+KA9CErT3U/1lNKmInZ5d5/GAZsJPabYgtJUy+ynohJAPeQRtZsaclfbn/VDMrijqo3IiUy68kGcAqcQ7oTM8XXsI+bZodBrMbLeUYzw2Sgce7kKpihGilPMfzK9EkBxOV60fex1KYgm9ody6DTrrwgtWv8F3F+pkpf2b6kUh+S8ivceB0vagcWnpJ4nd04gejrlbLWIJvnHFxaHbUCwKGrmFP+jCGOTUHZ/HlN+SzgStbu+HY6iQ6ilVal9Q3hZV6qHW2VTteP/ycGAlvgMcHm1T+ynyJ/nwe54GXx6HSdXlrelnqjVegT39CNOFQTVDe4VCAZMQOpumIPoDFJ2f4Syq1KY9J3IAd0d+CnyZLziy187BarW+RDLZ95eJIAfMvnw+tBjxWXoXMSDDYTEEt5D95FfoAv8FRN37ZYpeDZyzqNXtRqJDFZVumvQfB4qIlcAsIs87qLarIqz+caes="
+         secure: "ZhfKqglYeazKQJMPzRjj0adMzNKiRPt8mBjg/G9bBZ/XuaLBRkazv/YbNfW4rirEjNr/yk2juVXytF58TajutmfeKRaUpH+0GLQ5gMCi+7xbkNBz5isrMz1+xVDN+JLVAreGjyUhZIP+/5+g7PNCXwnekdC/e9pE4JoLmuL5AE8qtHGjcR/PVc1+6wEy4x+fherblBRAcswrSDbPChFefDmeQoDcBKsvxMgrsplTcFDC5nAoANtAPW94KMYy5Fs9bZpGts3e2cqLucE/bsUtwMQe7qS76sIXKIWRUFXQ3MjNGyNwUlR8BxFYpw6ZpSK4iNN7SVydnkHwCHSLNA85bpHJ2a1VWbt5y5ywDM4XXdmxwQEwIAtYNzuTN/miCgrBZqAWdJbX2/6GZsF0KIvfyhqhDRNZb/EmJTYWI3cxDf7OjbiEpKg41Ajh/ZR7nmaDt6VwkpdbfJOAOK02O/9Qe1xdNIO9OqOP/C3BBNuEdkHVOOS9FlWUXARW/Y2se8qSSFhmYlaoqCleJ3HnwQFZyE4D83hGQy8Jz3Y7Llx7sHcufdG1iAImSzxNUwK/6UElfP6mG5ffCMGcqz3Gtao7SBZdR+8AeOYcjL9sLQKQFvk7F0MBHTEUtlYeGqbQ3px+efGCFV8GwNimm0Zc+c6kviH97XOeJU23iU/oOQhgano="
       skip_existing: true
       on:
           branch: master
