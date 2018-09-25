@@ -33,7 +33,6 @@ after_success:
   - cd ..
 
 deploy:
-  matrix:
   - provider: pypi
     distributions: sdist
     user: abelcarreras83
