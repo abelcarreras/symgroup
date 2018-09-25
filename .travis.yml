@@ -15,6 +15,7 @@ branches:
 notifications:
   email:
     - komuisan@gmail.com
+    - abelcarreras83@gmail.com
 
 install:
     - sudo apt-get install libblas-dev liblapack-dev
@@ -31,7 +32,7 @@ script:
 
 after_success:
     - coveralls
-    - cd ../..
+    - cd ..
 
 deploy:
     # pypi
