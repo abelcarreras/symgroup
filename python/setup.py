@@ -1,10 +1,15 @@
 from numpy.distutils.core import setup, Extension
 
 
+def get_version_number():
+    for l in open('symgroupy/__init__.py', 'r').readlines():
+        if not(l.find('__version__')):
+            exec(l, globals())
+            return __version__
+
+
 symgroupy = Extension('symgroupy.symgrouplib',
-                      #extra_compile_args=['-ffixed-line-length-0'],
                       #include_dirs=include_dirs_numpy,
-                      #include_dirs=['../include'],
                       extra_f77_compile_args=['-ff2c -ffixed-line-length-0'],
                       libraries=['lapack', 'blas'],
                       sources=['symgrouplib.pyf',
@@ -14,7 +19,7 @@ symgroupy = Extension('symgroupy.symgrouplib',
 
 
 setup(name='symgroupy',
-      version='0.1',
+      version=get_version_number(),
       description='symgroupy',
       author='Abel Carreras',
       author_email='abelcarreras83@gmail.com',

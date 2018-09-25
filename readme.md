@@ -1,3 +1,7 @@
+[![Build Status](https://travis-ci.org/abelcarreras/symgroup.svg?branch=master)](https://travis-ci.org/abelcarreras/symgroup)
+[![Coverage Status](https://coveralls.io/repos/github/abelcarreras/symgroup/badge.svg?branch=master)](https://coveralls.io/github/abelcarreras/symgroup?branch=master)
+
+
 SymGroup
 =========
 Software to calculate continuous symmetry measures of 
