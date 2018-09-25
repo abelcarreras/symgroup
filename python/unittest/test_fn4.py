@@ -34,14 +34,14 @@ class TestSymgroupy(unittest.TestCase):
         permutation_ref = [4, 1, 3, 2, 0]
         np.testing.assert_allclose(permutation_ref, self.fen4.optimum_permutation, rtol=1e-6)
 
-    def test_nearest_structure(self):
-        nearest_structure_test = [[-1.60000000e-05, -1.42666667e-03,  1.33333333e-06],
-                                  [ 1.44161250e+00, -1.11226476e+00,  6.37547696e-01],
-                                  [ 6.37888213e-01,  1.11433926e+00, -1.43985874e+00],
-                                  [-1.44182094e+00, -1.11519466e+00, -6.37463323e-01],
-                                  [-6.35808432e-01,  1.11456756e+00,  1.44060173e+00]]
-
-        np.testing.assert_allclose(nearest_structure_test, self.fen4.nearest_structure, rtol=1e-6)
+#    def test_nearest_structure(self):
+#        nearest_structure_test = [[-1.60000000e-05, -1.42666667e-03,  1.33333333e-06],
+#                                  [ 1.44161250e+00, -1.11226476e+00,  6.37547696e-01],
+#                                  [ 6.37888213e-01,  1.11433926e+00, -1.43985874e+00],
+#                                  [-1.44182094e+00, -1.11519466e+00, -6.37463323e-01],
+#                                  [-6.35808432e-01,  1.11456756e+00,  1.44060173e+00]]
+#
+#        np.testing.assert_allclose(nearest_structure_test, self.fen4.nearest_structure, rtol=1e-6)
 
     def test_reference_axis(self):
 
