@@ -1,46 +1,45 @@
 language: python
 os:
-- linux
+  - linux
+
 python:
-  - "2.7"
-  - "3.4"
+  - '2.7'
+  - '3.4'
 
 branches:
   only:
-    - master
-    - development
+  - master
+  - development
 
 notifications:
   email:
-#    - komuisan@gmail.com
-    - abelcarreras83@gmail.com
+  - abelcarreras83@gmail.com
 
 install:
-    - sudo apt-get install libblas-dev liblapack-dev
-    - sudo apt-get install gfortran
-    - cd python
-    - pip install coverage
-    - pip install python-coveralls
-    - pip install -r requirements.txt
-    - pip install -e .
+  - sudo apt-get install libblas-dev liblapack-dev
+  - sudo apt-get install gfortran
+  - cd python
+  - pip install coverage
+  - pip install python-coveralls
+  - pip install -r requirements.txt
+  - pip install -e .
 
 script:
-    - cd unittest
-    - coverage run --source=../symgroupy -m unittest discover . "test_*.py"
+  - cd unittest
+  - coverage run --source=../symgroupy -m unittest discover . "test_*.py"
 
 after_success:
-    - coveralls
-    - cd ..
+  - coveralls
+  - cd ..
 
 deploy:
-    # pypi
-    - provider: pypi
-      distributions: sdist
-      user: abelcarreras83
-      password:
-         secure: "Ym8OA8vXlVcLB9FVIf5rvYkSGHUhRvhJ9CSlSsxLbtrUFVvDjrzySKMK34pXssPbOmIkVqtHdg5lr+ljh1dstmIRxwi71urzjDaNLpfrHaN6hqninXqkfzXRD/7iekeTlWs5TO4QJjEFQUI9LKQ7KzKyT7fb4x17/H8HYSh25DBfQoYctABKuCUUV0JDYQ99IlaWo4hAbsh9fqeIEKqplIS7xX/87HKhYIjo8CPwQqit4LWMezchoz94DuWyghLPZoLJO3Hngw1t812RbsDeNWMxXVN0FO/qbC6XSQ1np4pj7bNxljbqwh/Wu3PbCHspi9swWNF9q7/VGiKIJKoHSNNd404kW33PAsO2b+pzPm5qczuePHuA7QMv2OJCyJiGJkugmv7DiJeQDi4ODtKVxdRiOr8GzZGB/WWqMrU5nWvvuKE/lbHm/h5GheNDykwoqfIPoN/2sPnMliCqX5yGIcpUHEzgmWHy7VkmZNzrVTcY3buryUHYfKOPFpeYb/up/CEo8vJx1WIS7K0S1MLc3se04M2Vh8AXwPSRQkAXy4aCQsOAU8Dn900f5Rn/bOWElsc8J86njc+jfkgEE9X0yLImRWH6TWiD1NUqCt2ErQFYp1Rio27ebYmMLK/b6JAPKfG92udqwWpRWQQchmyTHSiH8aRL8Atp5fNmVMHxRXw="
-      skip_existing: true
-      on:
-          branch: master
- #         branch: development
-          tags: False
+  matrix:
+  - provider: pypi
+    distributions: sdist
+    user: abelcarreras83
+    password:
+      secure: HzlBNWl/45Hl3iQ1prEMFgyriUBoJO1TYNaLmJyS2pFhvualmXlLGQm43ymVPVTOcKICgR0YrXQj98+aXgIcv0g3QCmORifY2EvkVv6pnro3GSFIbdW/OXgoTvq7G55Oj0rcQvf0uf5vY58YxKbeEEhbtLsJItlgSNu0fQZXPFMke18h1zsnCGXjp+ltMwwz9GyLEww1Lj+Q2ri4/Byg4j+3iMt/AW3r7aqDwDDH9ATU+jrbgQUxXnpRByJPgGCBN/Rn5JsldfBws/JKJiXMv1hWX1c69Vq00fc1sGFqGniwSuG2MYpRhmfaoAXnwFUKWfWeCK9WLy3ylnjVrPaNMP9Laei8Gr+neCfx+DgS4F/Z5FOndZCQjLRpJRbeQbg1b0UpsnUw/XlEAgwtWnU0+ibT28OfO2bhzBCfEpT2qDobdya6ZrPq0BgnG8RewzfzH4t2JeZWgm9qBPevb0ycy6fFH3dqOEalpP4raCvLcRGEqoFTrVy8SRML1rGe5vUrb5qgOfF03Zx/ZepEoWvXVU0mhQXhuAG1HZEaOcAl5pzs6S+uUY3xXyGAmjMuoh60OmZjeRrTkT3q4WCncgBqyqJ7SLLpCa2GnJxflqUeCWgpyJ73b/tH4qHsMiRkvWXDOI+cgxAoBZihaz81yodptk2XOprCsPvI6fAZOHSNVOU=
+    skip_existing: true
+    on:
+      branch: master
+      tags: false
