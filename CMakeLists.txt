@@ -47,12 +47,14 @@ if(WITH_MKL)
     include_directories("/opt/intel/compilers_and_libraries/mac/include/intel64/")
     #  set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -lmkl_def -lmkl_core -lmkl_lapack -lmkl_intel_thread  -lmkl_sequential -lmkl_intel_lp64 -lguide  -lpthread")
     set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -lmkl_core -lmkl_intel_thread -lmkl_sequential -lmkl_intel_lp64 -lpthread")
-
 else(WITH_MKL)
-    link_directories("/usr/lib")
+    find_library(LAPACK_LIBRARY lapack HINTS /usr/lib/)
+    find_library(BLAS_LIBRARY blas HINTS /usr/lib/)
+    link_directories(${LAPACK_LIBRARY} ${BLAS_LIBRARY})
+    #target_link_libraries(symgroup PUBLIC ${LAPACK_LIBRARY} ${BLAS_LIBRARY})
+    #target_link_libraries(symgrouplib PUBLIC ${LAPACK_LIBRARY} ${BLAS_LIBRARY})
     set (CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -llapack -lblas")
 endif(WITH_MKL)
-
 
 # build executables
 set( EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/EXE)
