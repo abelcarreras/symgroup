@@ -15,8 +15,12 @@ symgroupy = Extension('symgroupy.symgrouplib',
                       sources=['symgrouplib.pyf',
                                '../src/symgrouplib.F',
                                '../src/radius.F',
-                               '../src/connectivity.F'])
-
+                               '../src/connectivity.F',
+                               '../src/jacobi.F',
+                               '../src/linear_algebra.F',
+                               '../src/mass.F',
+                               '../src/measure.F',
+                               '../src/operations.F'])
 
 setup(name='symgroupy',
       version=get_version_number(),

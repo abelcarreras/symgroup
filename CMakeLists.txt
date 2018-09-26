@@ -40,8 +40,6 @@ else (Fortran_COMPILER_NAME MATCHES "gfortran.*")
     set (CMAKE_Fortran_FLAGS_DEBUG   "-O0 -g")
 endif (Fortran_COMPILER_NAME MATCHES "gfortran.*")
 
-include_directories("${CMAKE_SOURCE_DIR}/include")
-
 # MKL library
 if(WITH_MKL)
     message(STATUS "Use MKL library")
@@ -64,12 +62,23 @@ set (EXECUTABLES "symgroup")
 add_executable ("symgroup"
         "src/symgroup.F"
         "src/radius.F"
-        "src/connectivity.F")
+        "src/connectivity.F"
+        "src/jacobi.F"
+        "src/linear_algebra.F"
+        "src/mass.F"
+        "src/measure.F"
+        "src/operations.F"
+        "src/read_input.F")
 
 ADD_LIBRARY ("symgrouplib" "STATIC"
         "src/symgrouplib.F"
         "src/radius.F"
-        "src/connectivity.F")
+        "src/connectivity.F"
+        "src/jacobi.F"
+        "src/linear_algebra.F"
+        "src/mass.F"
+        "src/measure.F"
+        "src/operations.F")
 
 # install executables and scripts
 install (TARGETS ${EXECUTABLES}
