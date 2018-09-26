@@ -49,7 +49,7 @@ Input file with keywords::
  N     4.24692   -3.22298   22.54931
  N     4.75958   -0.12712   23.86630
 
-In this example, the program searches for the best eight :math:`C_3` axis and
+In this example, the program searches for the best eight **C3** axis and
 compares only atoms with the same label.
 
 Output file (**.zout2**)::
@@ -71,5 +71,5 @@ Output file (**.zout2**)::
  -0.57719   0.57751  -0.57751
  -0.74687  -0.33012   0.33012
 
-The **.zout2** file contains the 8 lowest :math:`C_3` measures with the
+The **.zout2** file contains the 8 lowest **C3** measures with the
 corresponding axis orientations.
