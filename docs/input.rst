@@ -2,7 +2,7 @@
 Input file
 ==========
 
-STRUCTURE
+Structure
 ---------
 - One line with user information to identify the case under study (optional). If this line is present, it must have a $ symbol in the first column.
 - Keywords for the options chosen (optional).
@@ -11,7 +11,7 @@ STRUCTURE
 - Label identifying the compound to which the subsequent list of atomic coordinates belongs. This might be the CSD refcode, the ICSD collection code, or the compound name.
 - Atomic label and coordinates, one atom per line (free format). If the %connect keyword is used (see below), the label must correspond to an element symbol. If no atomic labels are given, the %nolabel keyword must be used (see below). A set of lines 5 and 6 can be added for as many atom sets as desired.
 
-NOTES
+Notes
 -----
 - Type SYMGROUP + to obtain a list of the symmetry elements that the program can measure.
 - Type SYMGROUP +keywords to obtain a list of the available keywords on the screen.

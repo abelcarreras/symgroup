@@ -1,12 +1,10 @@
-EXAMPLE
+Example
 =======
 
-Simple input data file (.zdat) ::
+Simple input data file (**.zdat**) ::
 
  $Ge9 rotation analysis
-
  9 0
-
  c 4
  BEHLOQ
  Ge2    25.05753   17.90064   15.10444
@@ -29,7 +27,7 @@ Simple input data file (.zdat) ::
  Ge6     9.90916    7.34901   12.47335
  Ge7     7.92895    7.26098   10.83291
 
-Output file (.ztab) ::
+Output file (**.ztab**) ::
 
  Ge9 rotation analysis
  3D Rotation Measures C 4 Group
@@ -37,3 +35,40 @@ Output file (.ztab) ::
  STRUCTURE         MEASURE
   BEHLOQ     ,     0.58207
   BEHLUW     ,     0.69466
+
+Input file with keywords::
+
+ $ ML4 Structures with d6 configuration %label
+ %multi 8
+ 4 1
+ c 3
+ CIWQUU
+ Fe    5.51829   -1.68040   22.81703
+ N     6.78978   -3.22298   23.08474
+ N     6.27712   -0.12712   21.76775
+ N     4.24692   -3.22298   22.54931
+ N     4.75958   -0.12712   23.86630
+
+In this example, the program searches for the best eight **C:sub:`3`** axis and
+compares only atoms with the same label.
+
+Output file (**.zout2**)::
+
+ ML4 Structures with d6 configuration
+
+ ************************************************
+ CIWQUU
+
+  6.52709   6.52709   6.52709   6.52709   6.52709
+
+ -0.74666   0.74666  -0.33021   0.33021  -0.33021
+ -0.57751   0.57751  -0.57719   0.57719   0.57719
+ -0.33012   0.33012   0.74687  -0.74687   0.74687
+
+  6.52709   6.52709   6.52709
+
+  0.33021  -0.74666   0.74666
+ -0.57719   0.57751  -0.57751
+ -0.74687  -0.33012   0.33012
+
+The **.zout2** file contains the 8 lowest C:sub:`3` measures with the corresponding axis orientations.
