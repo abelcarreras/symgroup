@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/abelcarreras/symgroup.svg?branch=master)](https://travis-ci.org/abelcarreras/symgroup)
 [![Coverage Status](https://coveralls.io/repos/github/abelcarreras/symgroup/badge.svg?branch=master)](https://coveralls.io/github/abelcarreras/symgroup?branch=master)
-
+[![PyPI version](https://badge.fury.io/py/symgroupy.svg)](https://pypi.org/project/symgroupy)
 
 SymGroup
 =========
@@ -29,6 +29,10 @@ Installation instructions
    cd python
    python setup.py install --user
    ```
+2c. Obtain from PyPi repository
+```
+pip install symgroupy --user
+```
 
 Authors
 --------------------------------------------------------
