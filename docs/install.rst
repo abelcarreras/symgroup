@@ -4,7 +4,7 @@ How to install
 Standalone binary
 -----------------
 Use configure script located in the symgroup directory to create
-a suitable makefile with the available compiler options.
+a suitable makefile with the available compiler options. ::
 
    $ ./configure [options]
 
