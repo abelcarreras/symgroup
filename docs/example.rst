@@ -71,5 +71,5 @@ Output file (**.zout2**)::
  -0.57719   0.57751  -0.57751
  -0.74687  -0.33012   0.33012
 
-The **.zout2** file contains the 8 lowest ::math::`C_3` measures with the
-corresponding axis orientations. :math:`a^2 + b^2 = c^2`.
+The **.zout2** file contains the 8 lowest :math:`C_3` measures with the
+corresponding axis orientations.
