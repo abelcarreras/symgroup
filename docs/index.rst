@@ -26,3 +26,4 @@ with which the executable version of the program is stored.
    install
    input
    keywords
+   example
