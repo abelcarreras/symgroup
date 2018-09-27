@@ -9,6 +9,7 @@ a suitable makefile with the available compiler options. ::
    $ ./configure [options]
 
 Options:
+
 - release: Use strong optimizations (slow to compile fast to run)
 - debug: Use few code optimizations (fast to compile slow to run)
 - gcc : Use gfortran compiler (default)
