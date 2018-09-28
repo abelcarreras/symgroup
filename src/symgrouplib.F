@@ -105,7 +105,7 @@ c
 	label   = .false.
 	multi   = .false.
 	hconv   = .false.
-	connect = .false.
+	connect = .true.
 	permu   = .false.
 	atfix   = .false.
 	rfix    = .false.
