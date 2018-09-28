@@ -21,6 +21,9 @@ class Symgroupy:
         except IndexError:
             operation_axis = 1
 
+        if labels is None:
+            labels = ['{}'.format(i) for i in range(len(coordinates))]
+
         labels = np.array([list('{:<2}'.format(char)) for char in labels], dtype='S')
         coordinates = np.ascontiguousarray(coordinates)
 
