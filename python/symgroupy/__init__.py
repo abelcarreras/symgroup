@@ -1,4 +1,4 @@
-__version__ = '0.3'
+__version__ = '0.2'
 
 from symgroupy import symgrouplib
 import numpy as np

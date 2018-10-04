@@ -14,7 +14,7 @@ branches:
 notifications:
   email:
   - abelcarreras83@gmail.com
-  - komuisan@gmail.com
+#  - komuisan@gmail.com
 
 install:
   - sudo apt-get install libblas-dev liblapack-dev
@@ -38,7 +38,7 @@ deploy:
     distributions: sdist
     user: abelcarreras83
     password:
-      secure: "Hra1HN0aJfmDDKvSnrQUtO0XC9752U17Si2xX3bYnyNp9qOMoQcEjYtuJeBsmjK/fnONAoqn2nQRmy7rciYFaosL47UdoSzsLqg1SAmq3xyOt2RF6CzJVwLeHDhJjTvnk69fikvnCSmZMNczCECTsf7pOg2GUD6wTGRZir+jlE3VDL/Vwqk4VJ70v6J36DDP8QSvtBVLVNSNNH3nfNPKCWlzshImhKN6neTOFZFGah1YTRgsZE8vS4fQw6MK6TG9rNneE0OOYtKw+bul87T0rDHSepYZWKMAdkW9ezc+dCyr9sD/UFOThTzFjsQ2PX2qLKyP+JThzcUiAlTJ0lUZqPYYQmzTS6QcvTJCRioC3i8jdW3p8ybbfYhQS7oNgJMwrj/UNdN9cF66Iy/d4BewYamMemKfA2MTWje+oWFDWXOsDPvtyN+9S8GCFzfrMJ2wAb1Z+K8uNmAVzWMo/1SlXtzIMer9/KONCZDUZu29PGPnD/vNON8EOu6efPf3hMFcBL8VTmQWxdhMl2y5hfMNUi2IKqTIPVa59SS4cQO1jJtw1FPQ1oELLSExNUt9OZV+5N6JPWz+LGmlRdPAG/91yuHQ5OnvRL4lMc9W5FOuhwbnCFNagzapMezDo4mG9FYSA0dt9N4mKEH6O/adHu8Ybrhjm5UeyT/IjZyR412zz+s="
+      secure: "J3k4wuEjGnSNNmSXuRNpPGdhW4K7RxG1hPzW9njeCH9a6S8hKX8Qj55dxx1ZilUxYZ0/S4vhKupnKvdgl0lgiR2X+wdFXzgPJE7eqV+yhEoXOv5Wqrm5V4Nq5lUVKOvtwBmCjDOIPVaKUD6MVQU/nTTK+o4/q8dscfuuuabzFxwGEEhNo+Jc/5iP4vVtkxzylAl5KqIFL4hwQafHDoB/KCYWZI8KnRm5TR6AZa6tsz4L5ESY1qypjpcZDmEW6b/XoZRgbHyQtH/gE1UPKZ+deLVDGaojrHSad3ZoNk4BenZU8nERv8R/rL9694n8U/KdBWqb8moEP32Udi8ba/8C5MsReUPw4e3Ltxnpe84xENw+71GWEDFjYNTi8BzvWoHV0qTx6kdo4sL0MOhcSun82IwGYIFezkKY8CInJZnvENgSveQ5y/NNHYwp3yIutU1Xtp89+EXW7WKm7IHCG/0KqDz7ziFYWon1xfxoNRQbJwxpr+H7gpjGF9GU4MFx8Rq0Wk+EEfrWv7TrNv5nJsQ1ghDSYN9XW7kJAz12tE1e7zRZWUO71PvTQdUuQudOOYWz+S87OJcWDASdB5ma4U6J//jErxBxtNCE3EBLp14Tf7HiEmW9ht0MuLDdaoW68Ohi1ZzGL11oWelB1Dx9OoaHsjUgt+N2oRhFpas+YCgpwPU="
     skip_existing: true
     on:
       branch: master

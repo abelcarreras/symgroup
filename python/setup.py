@@ -1,4 +1,5 @@
 from numpy.distutils.core import setup, Extension
+import os, sys
 
 
 def get_version_number():
@@ -8,19 +9,28 @@ def get_version_number():
             return __version__
 
 
+# Make python package
+if 'TRAVIS' in os.environ:
+    open('check','w').close()
+
+if os._exists('check'):
+    s_dir = 'src/'
+else:
+    s_dir = '../src/'
+
 symgroupy = Extension('symgroupy.symgrouplib',
                       #include_dirs=include_dirs_numpy,
                       extra_f77_compile_args=['-ff2c -ffixed-line-length-0'],
                       libraries=['lapack', 'blas'],
                       sources=['symgrouplib.pyf',
-                               '../src/symgrouplib.F',
-                               '../src/radius.F',
-                               '../src/connectivity.F',
-                               '../src/jacobi.F',
-                               '../src/linear_algebra.F',
-                               '../src/mass.F',
-                               '../src/measure.F',
-                               '../src/operations.F'])
+                               s_dir + 'symgrouplib.F',
+                               s_dir + 'radius.F',
+                               s_dir + 'connectivity.F',
+                               s_dir + 'jacobi.F',
+                               s_dir + 'linear_algebra.F',
+                               s_dir + 'mass.F',
+                               s_dir + 'measure.F',
+                               s_dir + 'operations.F'])
 
 setup(name='symgroupy',
       version=get_version_number(),
@@ -28,4 +38,5 @@ setup(name='symgroupy',
       author='Abel Carreras',
       author_email='abelcarreras83@gmail.com',
       packages=['symgroupy'],
+      package_data={'': ['../src/*.F']},
       ext_modules=[symgroupy])
