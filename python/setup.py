@@ -10,13 +10,14 @@ def get_version_number():
 
 
 # Make python package
-if 'TRAVIS' in os.environ:
-    open('check','w').close()
 
 if os._exists('check'):
     s_dir = 'src/'
 else:
     s_dir = '../src/'
+
+if 'TRAVIS' in os.environ:
+    open('check','w').close()
 
 symgroupy = Extension('symgroupy.symgrouplib',
                       #include_dirs=include_dirs_numpy,
