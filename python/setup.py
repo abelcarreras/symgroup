@@ -1,5 +1,8 @@
 from numpy.distutils.core import setup, Extension
-import os, sys
+from distutils.dir_util import copy_tree
+from distutils.errors import DistutilsFileError
+
+#import shutil
 
 
 def get_version_number():
@@ -11,13 +14,12 @@ def get_version_number():
 
 # Make python package
 
-if os._exists('check'):
-    s_dir = 'src/'
-else:
-    s_dir = '../src/'
+try:
+    copy_tree('../src', './src', update=True)
+except DistutilsFileError:
+    pass
 
-if 'TRAVIS' in os.environ:
-    open('check','w').close()
+s_dir = 'src/'
 
 symgroupy = Extension('symgroupy.symgrouplib',
                       #include_dirs=include_dirs_numpy,
@@ -39,5 +41,4 @@ setup(name='symgroupy',
       author='Abel Carreras',
       author_email='abelcarreras83@gmail.com',
       packages=['symgroupy'],
-      package_data={'': ['../src/*.F']},
       ext_modules=[symgroupy])
