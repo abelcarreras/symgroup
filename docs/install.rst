@@ -36,13 +36,13 @@ Python module (symgroupy)
 
 Python module for symgroup is called symgroupy and it is compatible with
 both python2 and python3. To install symgroupy go to python directory
-and use :file: `setup.py` to install the code using :program: `setuptools` python
+and use :file:`setup.py` to install the code using :program:`setuptools` python
 module. A simple setup may be ::
 
-   $ setup.py install --user
+   $ python setup.py install --user
 
 the code will be installed as a python module. To check that it is properly installed you can
-run the :program: `python interpret and execute ::
+run the :program:`python interpret and execute ::
 
    import symgroupy
 
