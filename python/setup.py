@@ -23,7 +23,7 @@ s_dir = 'src/'
 
 symgroupy = Extension('symgroupy.symgrouplib',
                       #include_dirs=include_dirs_numpy,
-                      extra_f77_compile_args=['-ff2c -ffixed-line-length-0'],
+                      extra_f77_compile_args=['-ffixed-line-length-0'],
                       libraries=['lapack', 'blas'],
                       sources=['symgrouplib.pyf',
                                s_dir + 'symgrouplib.F',
