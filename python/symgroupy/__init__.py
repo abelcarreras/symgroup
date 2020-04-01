@@ -36,7 +36,7 @@ class Symgroupy:
         coordinates = np.ascontiguousarray(coordinates)
 
         outputs = symgrouplib.symgroup(coordinates, multi, labels, central_atom, operation,
-                                       operation_axis, fixcenter, center, ignore_connectivity)
+                                       operation_axis, fixcenter, center, ignore_connectivity, len(coordinates))
 
         # Reorganize outputs
         self._csm = outputs[0]

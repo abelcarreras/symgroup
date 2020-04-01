@@ -7,8 +7,8 @@ python module symgrouplib ! in
         notconn, nat, s_max, NearStruc, vmax, optper, refAxis, sm, vm) ! in :symgrouplib:symgrouplib.F
 
 !           Inputs
-            integer, depend(coordinates), intent(hide) :: nat=shape(coordinates,0)
-!            integer, intent(in) :: nat
+!            integer, depend(coordinates), intent(hide) :: nat=shape(coordinates,0)
+            integer, intent(in) :: nat
             real*8, dimension(nat, 3), intent(in) :: coordinates
             character, dimension(nat), intent(in) :: labels*2
             integer, intent(in) :: multi, pm, oeix, central_atom
