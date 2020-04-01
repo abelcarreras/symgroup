@@ -21,7 +21,7 @@ install:
   - sudo apt-get install gfortran
   - cd python
   - pip install coverage
-  - pip install python-coveralls
+  - pip install coveralls
   - pip install -r requirements.txt
   - pip install -e .
 
