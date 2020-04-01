@@ -1,4 +1,4 @@
-__version__ = '0.3.1'
+__version__ = '0.3.2'
 
 from symgroupy import symgrouplib
 import numpy as np
@@ -11,7 +11,7 @@ class Symgroupy:
                  multi=1,                    # multiple measures
                  labels=None,                # atomic symbols (or other representative labels)
                  central_atom=None,          # Atom number that contains the center atom (if exist)
-                 ignore_connectivity=True,   # ignore connectivity
+                 ignore_connectivity=False,  # ignore connectivity
                  center=None):               # Center of symmetry measure (if None: search optimum)
 
         if central_atom is None:
@@ -31,6 +31,7 @@ class Symgroupy:
 
         if labels is None:
             labels = ['{}'.format(i) for i in range(len(coordinates))]
+            ignore_connectivity = True
 
         labels = np.array([list('{:<2}'.format(char)) for char in labels], dtype='S')
         coordinates = np.ascontiguousarray(coordinates)
@@ -78,11 +79,12 @@ class Symgroupy:
 
 if __name__ == '__main__':
 
-    cart_coordinates = [[15.51829, -1.68040, 22.81703],
-                        [6.78978, -3.22298, 23.08474],
-                        [6.27712, -0.12712, 21.76775],
-                        [4.24692, -3.22298, 22.54931],
-                        [4.75958, -0.12712, 23.86630]]
+    cart_coordinates = [[-0.15936255,   -0.27888446,    0.00000000],
+                        [0.19729187,   -1.28769446,    0.00000000],
+                        [0.19731029,    0.22551373,    0.87365150],
+                        [0.19731029,    0.22551373,   -0.87365150],
+                        [-1.22936255,   -0.27887127,    0.00000000]]
+
 
 # Symmetry point groups available:
     # e: identity
@@ -92,12 +94,12 @@ if __name__ == '__main__':
     # sn: improper rotation (n:order)
 
     fen4 = Symgroupy(coordinates=cart_coordinates,
-                     group='c3',
+                     group='c4',
                      multi=3,
-                     labels=['Fe', 'N', 'N', 'N', 'N'],
+                     labels=['C', 'H', 'H', 'H', 'H'],
                      central_atom=1,
-                     center=[0, 0, 0],
-                     ignore_connectivity=False,
+                     center=[-0.15936255,   -0.27888446,    0.00000000],
+                     ignore_connectivity=True,
                      )
 
     print('CSM: {}'.format(fen4.csm))
