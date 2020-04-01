@@ -3,20 +3,24 @@
 
 python module symgrouplib ! in
     interface  ! in :symgroup
-        subroutine symgroup(coordinates, multi, labels, central_atom, oper, oeix, nat, s_max, NearStruc, vmax, optper, refAxis, sm, vm) ! in :symgrouplib:symgrouplib.F
+        subroutine symgroup(coordinates, multi, labels, central_atom, oper, oeix, centerfix, center, &
+        nat, s_max, NearStruc, vmax, optper, refAxis, sm, vm) ! in :symgrouplib:symgrouplib.F
 
 !           Inputs
-            integer, depend(coordinates), intent(hide) :: nat=shape(coordinates,0)
-            real*8, dimension(nat, 3), intent(in) :: coordinates
-            character, dimension(nat), intent(in) :: labels*2
+!            integer, depend(coordinates), intent(hide) :: nat=shape(coordinates,0)
+            integer, intent(in) :: nat
+            real*8, dimension(5, 3), intent(in) :: coordinates
+            character, dimension(5), intent(in) :: labels*2
             integer, intent(in) :: multi, pm, oeix, central_atom
             character, intent(in) :: oper*1
+            logical, intent(in) :: centerfix
+            real*8, dimension(3), intent(in) :: center
 
 !           Outputs
             real*8, intent(out) :: s_max
-            real*8, dimension(nat, 3), intent(out) :: NearStruc
+            real*8, dimension(5, 3), intent(out) :: NearStruc
             real*8, dimension(3), intent(out) :: vmax
-            integer, dimension(nat), intent(out) :: optper
+            integer, dimension(5), intent(out) :: optper
             real*8, dimension(4,3), intent(out) :: refAxis
             real*8, intent(out) :: sm(20),vm(20,3)
 

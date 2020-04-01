@@ -1,4 +1,4 @@
-__version__ = '0.2.2'
+__version__ = '0.3.0'
 
 from symgroupy import symgrouplib
 import numpy as np
@@ -6,11 +6,12 @@ import numpy as np
 
 class Symgroupy:
     def __init__(self,
-                 coordinates,  # Cartesian coordinates
-                 group,        # symmetry point group
-                 multi=1,      # multiple measures
-                 labels=None,  # atomic symbols (or other representative labels)
-                 central_atom=None):  # Atom number that contains the center atom (if exist)
+                 coordinates,        # Cartesian coordinates
+                 group,              # symmetry point group
+                 multi=1,            # multiple measures
+                 labels=None,        # atomic symbols (or other representative labels)
+                 central_atom=None,  # Atom number that contains the center atom (if exist)
+                 center=None):       # Center of symmetry measure (if None: search optimum)
 
         if central_atom is None:
             central_atom = 0
@@ -21,13 +22,20 @@ class Symgroupy:
         except IndexError:
             operation_axis = 1
 
+        if center is None:
+            fixcenter = False
+            center= [0, 0, 0]
+        else:
+            fixcenter = True
+
         if labels is None:
             labels = ['{}'.format(i) for i in range(len(coordinates))]
 
         labels = np.array([list('{:<2}'.format(char)) for char in labels], dtype='S')
         coordinates = np.ascontiguousarray(coordinates)
 
-        outputs = symgrouplib.symgroup(coordinates, multi, labels, central_atom, operation, operation_axis)
+        outputs = symgrouplib.symgroup(coordinates, multi, labels, central_atom, operation,
+                                       operation_axis, fixcenter, center, len(coordinates))
 
         # Reorganize outputs
         self._csm = outputs[0]
@@ -69,7 +77,7 @@ class Symgroupy:
 
 if __name__ == '__main__':
 
-    cart_coordinates = [[1.51829, -1.68040, 22.81703],
+    cart_coordinates = [[15.51829, -1.68040, 22.81703],
                         [6.78978, -3.22298, 23.08474],
                         [6.27712, -0.12712, 21.76775],
                         [4.24692, -3.22298, 22.54931],
@@ -86,7 +94,8 @@ if __name__ == '__main__':
                      group='c3',
                      multi=8,
                      labels=['Fe', 'N', 'N', 'N', 'N'],
-                     central_atom=1
+                     central_atom=1,
+                     # center=[0, 0, 0]
                      )
 
     print('CSM: {}'.format(fen4.csm))

@@ -1,7 +1,7 @@
 
        subroutine symgroup(coordinates, Nmulti_inp,
-     &symbols, pm, oper, oeix, m, s_max, NearStruc,
-     &v_max, optper, refAxis, sm, vm)
+     &symbols, pm, oper, oeix, cfix, center_coor, m,
+     &s_max, NearStruc, v_max, optper, refAxis, sm, vm)
 c
 c
 c   Aquest programa mesura la distancia entre un estructura i l'estructura
@@ -44,7 +44,7 @@ c-----------------------------------------------------------
       character        :: input*80,title*80,line*80
 	logical	     :: keyctrl,pla_ctrl,ctrl_nvecs,group
 	logical	     :: label,multi,hconv,connect,permu,
-     .            atfix,rfix,dim2D,csd,nolabel,centerfix
+     &            atfix,rfix,dim2D,csd,nolabel,centerfix,cfix
 c
         character, parameter :: fit(90)*2=(/
      &        "1 ","2 ","3 ","4 ","5 ","6 ","7 ","8 ","9 ","10",
@@ -70,7 +70,7 @@ C--MQL
 c        character :: yn*1    ! DCC: this version always runs
         integer :: npmt(4), khg
         real*8  :: apmt(4)
-      double precision  cm(3)
+      double precision  cm(3), center_coor(3)
 
       real*8, dimension(m,3) :: coordinates, NearStruc
       integer :: Nmulti_inp
@@ -109,7 +109,7 @@ c
 	permu   = .false.
 	atfix   = .false.
 	rfix    = .false.
-      centerfix = .false.
+      centerfix = cfix
 	dim2D   = .false.
 	csd     = .false.
 	nolabel=.false.
@@ -117,6 +117,8 @@ C--MQL
         mute=.true.
 C--MQL ///
 c
+       cm(1:3) = center_coor(1:3)
+
 c      Updated things
        if ((pm).eq.0) then
          nll = m
