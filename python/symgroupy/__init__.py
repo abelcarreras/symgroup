@@ -1,4 +1,4 @@
-__version__ = '0.3.0'
+__version__ = '0.3.1'
 
 from symgroupy import symgrouplib
 import numpy as np
@@ -6,12 +6,13 @@ import numpy as np
 
 class Symgroupy:
     def __init__(self,
-                 coordinates,        # Cartesian coordinates
-                 group,              # symmetry point group
-                 multi=1,            # multiple measures
-                 labels=None,        # atomic symbols (or other representative labels)
-                 central_atom=None,  # Atom number that contains the center atom (if exist)
-                 center=None):       # Center of symmetry measure (if None: search optimum)
+                 coordinates,                # Cartesian coordinates
+                 group,                      # symmetry point group
+                 multi=1,                    # multiple measures
+                 labels=None,                # atomic symbols (or other representative labels)
+                 central_atom=None,          # Atom number that contains the center atom (if exist)
+                 ignore_connectivity=True,   # ignore connectivity
+                 center=None):               # Center of symmetry measure (if None: search optimum)
 
         if central_atom is None:
             central_atom = 0
@@ -35,7 +36,7 @@ class Symgroupy:
         coordinates = np.ascontiguousarray(coordinates)
 
         outputs = symgrouplib.symgroup(coordinates, multi, labels, central_atom, operation,
-                                       operation_axis, fixcenter, center, len(coordinates))
+                                       operation_axis, fixcenter, center, ignore_connectivity)
 
         # Reorganize outputs
         self._csm = outputs[0]
@@ -95,7 +96,8 @@ if __name__ == '__main__':
                      multi=8,
                      labels=['Fe', 'N', 'N', 'N', 'N'],
                      central_atom=1,
-                     # center=[0, 0, 0]
+                     center=[0, 0, 0],
+                     ignore_connectivity=True,
                      )
 
     print('CSM: {}'.format(fen4.csm))

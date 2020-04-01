@@ -1,7 +1,7 @@
 
        subroutine symgroup(coordinates, Nmulti_inp,
-     &symbols, pm, oper, oeix, cfix, center_coor, m,
-     &s_max, NearStruc, v_max, optper, refAxis, sm, vm)
+     &symbols, pm, oper, oeix, cfix, center_coor, notconn,
+     & m, s_max, NearStruc, v_max, optper, refAxis, sm, vm)
 c
 c
 c   Aquest programa mesura la distancia entre un estructura i l'estructura
@@ -43,7 +43,7 @@ c-----------------------------------------------------------
       character        :: oper*1,name*40
       character        :: input*80,title*80,line*80
 	logical	     :: keyctrl,pla_ctrl,ctrl_nvecs,group
-	logical	     :: label,multi,hconv,connect,permu,
+	logical	     :: label,multi,hconv,connect,permu,notconn,
      &            atfix,rfix,dim2D,csd,nolabel,centerfix,cfix
 c
         character, parameter :: fit(90)*2=(/
@@ -105,7 +105,7 @@ c
 	label   = .false.
 	multi   = .false.
 	hconv   = .false.
-	connect = .false.
+	connect = .not. notconn
 	permu   = .false.
 	atfix   = .false.
 	rfix    = .false.
@@ -117,7 +117,11 @@ C--MQL
         mute=.true.
 C--MQL ///
 c
-       cm(1:3) = center_coor(1:3)
+       if (cfix) then
+         cm(1:3) = center_coor(1:3)
+       else
+         cm(1:3) = (/0.0, 0.0, 0.0/)
+       endif
 
 c      Updated things
        if ((pm).eq.0) then
@@ -280,6 +284,13 @@ c Initialize to 0
            ivecs0(i) = 0
         enddo
 
+      do i=1, m+1
+         qf(i, :) = (/0.0, 0.0, 0.0/)
+         q(i, :) = (/0.0, 0.0, 0.0/)
+         q0(i, :) = (/0.0, 0.0, 0.0/)
+      enddo
+
+
 c Lectura del fitxer de la permutacio
 c       if(permu) then
 c         open(unit=55,file=trim(input)//".zper",status='unknown')
@@ -408,6 +419,14 @@ c Allocate some space
       allocate(p(noper,m,3))
       allocate(ptotal(noper,m,3))
       allocate(theta(noper),ctheta(noper),stheta(noper),ttheta(noper))
+
+c Initialize variables
+      do i=1,noper
+        do j=1, m
+          ptotal(i, j, :) = (/0.0, 0.0, 0.0/)
+        enddo
+      enddo
+
 
 c Write some file header
 	line='                                                     '
