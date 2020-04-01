@@ -93,11 +93,11 @@ if __name__ == '__main__':
 
     fen4 = Symgroupy(coordinates=cart_coordinates,
                      group='c3',
-                     multi=8,
+                     multi=3,
                      labels=['Fe', 'N', 'N', 'N', 'N'],
                      central_atom=1,
                      center=[0, 0, 0],
-                     ignore_connectivity=True,
+                     ignore_connectivity=False,
                      )
 
     print('CSM: {}'.format(fen4.csm))
