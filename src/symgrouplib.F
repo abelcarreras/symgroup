@@ -284,11 +284,11 @@ c Initialize to 0
            ivecs0(i) = 0
         enddo
 
-      do i=1, m+1
-         qf(i, :) = (/0.0, 0.0, 0.0/)
-         q(i, :) = (/0.0, 0.0, 0.0/)
-         q0(i, :) = (/0.0, 0.0, 0.0/)
-      enddo
+c      do i=1, m+1
+c         qf(i, :) = (/0.0, 0.0, 0.0/)
+c         q(i, :) = (/0.0, 0.0, 0.0/)
+c         q0(i, :) = (/0.0, 0.0, 0.0/)
+c      enddo
 
 
 c Lectura del fitxer de la permutacio
@@ -423,7 +423,10 @@ c Allocate some space
 c Initialize variables
       do i=1,noper
         do j=1, m
-          ptotal(i, j, :) = (/0.0, 0.0, 0.0/)
+c          ptotal(i, j, :) = (/0.0, 0.0, 0.0/)
+          ptotal(i, j, 1) = 0.0
+          ptotal(i, j, 2) = 0.0
+          ptotal(i, j, 3) = 0.0
         enddo
       enddo
 
