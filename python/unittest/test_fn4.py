@@ -18,7 +18,7 @@ class TestFeN4(unittest.TestCase):
                               multi=8,
                               labels=['Fe', 'N', 'N', 'N', 'N'],
                               central_atom=1,
-                              ignore_connectivity=True,
+                              connectivity=None,
                               )
 
     def test_csm(self):
@@ -91,7 +91,7 @@ class TestFeN4_2(unittest.TestCase):
                               labels=['Fe', 'N', 'N', 'N', 'N'],
                               central_atom=1,
                               center=[0, 0, 0],
-                              ignore_connectivity=False,
+                              connectivity='auto',
                               )
 
     def test_csm(self):

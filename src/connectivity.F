@@ -30,15 +30,13 @@ c
      &        "71","72","73","74","75","76","77","78","79","80",
      &        "81","82","83","84","85" /)
 c
-	common /real/r
-C--MQL \\\
-	common /sumrad/thresh
-        integer nuat(30)
+      integer nuat(30)
+      common /real/r
+      common /sumrad/thresh
 C--MQL ///
 c
 C--MQL \\\
-C-       thresh = 1.1d0
-        write(3,"(/'Connectivity radius factor: ',f7.4)") thresh
+       write(6,"(/'Connectivity radius factor: ',f7.4)") thresh
 C--MQL ///
 c
 c Pas de l'etiqueta atomica a Z atomic

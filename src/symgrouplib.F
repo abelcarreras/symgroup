@@ -1,7 +1,7 @@
 
        subroutine symgroup(coordinates, Nmulti_inp,
-     &symbols, pm, oper, oeix, cfix, center_coor, notconn,
-     & m, s_max, NearStruc, v_max, optper, refAxis, sm, vm)
+     &symbols, pm, oper, oeix, cfix, center_coor, contype, vcon,
+     & c_thresh, m, s_max, NearStruc, v_max, optper, refAxis, sm, vm)
 c
 c
 c   Aquest programa mesura la distancia entre un estructura i l'estructura
@@ -36,14 +36,14 @@ c  Nmulti numero de mesures per cada estructura (maxim valor 10)
 c  ptotal conjunt d'estructures que genera el grup
 c-----------------------------------------------------------
 	integer	     :: m,pm,nll,es,dimr,i_oper,nvecs,noper,
-     .                    oeix,Nmulti,iunit
+     .                    oeix,Nmulti,iunit, contype
 	double precision :: pi,s,s_max,A
 	double precision :: vecnorm(3),vmax(3),v(3),dvmax
       double precision :: sm(20),vm(20,3)
       character        :: oper*1,name*40
       character        :: input*80,title*80,line*80
 	logical	     :: keyctrl,pla_ctrl,ctrl_nvecs,group
-	logical	     :: label,multi,hconv,connect,permu,notconn,
+	logical	     :: label,multi,hconv,connect,permu,
      &            atfix,rfix,dim2D,csd,nolabel,centerfix,cfix
 c
         character, parameter :: fit(90)*2=(/
@@ -61,7 +61,8 @@ c
 	integer, allocatable ::      ip(:),ipf(:),ivecs(:),ivecs0(:)
       double precision,allocatable :: q(:,:),q0(:,:),qf(:,:)
       double precision,allocatable :: p(:,:,:),ptotal(:,:,:)  ! Group
-	double precision,allocatable :: convep(:,:),convap(:),vcon(:)
+c	double precision,allocatable :: convep(:,:),convap(:),vcon(:)
+	double precision :: convep(m,m),convap(m),vcon(m*(m+1)/2)
  	double precision,allocatable :: theta(:),ctheta(:),stheta(:),ttheta(:)
       character*8,allocatable ::       etiq0(:),etiq(:)
 C--MQL
@@ -78,6 +79,7 @@ c        character :: yn*1    ! DCC: this version always runs
       real*8, dimension(3) :: v_max
       integer, dimension(m) :: optper
       real*8, dimension(4,3) :: refAxis
+      real*8 :: thresh, c_thresh
 C--MQL ///
 c
 	common  /int1/dimr
@@ -86,11 +88,14 @@ c
 	common  /real3/A
       common /intlog/Nmulti
       common /center/cm
+      common /sumrad/thresh
 
 C--MQL --
         common /logical/label,multi,hconv,permu,atfix,
      & rfix,dim2D,csd,connect,nolabel,mute,centerfix
 C--MQL --/
+
+       thresh = c_thresh
 
 	title=' '
 	pi = 4.0d0*atan(1.0d0)
@@ -105,7 +110,6 @@ c
 	label   = .false.
 	multi   = .false.
 	hconv   = .false.
-	connect = .not. notconn
 	permu   = .false.
 	atfix   = .false.
 	rfix    = .false.
@@ -266,7 +270,7 @@ c	read(iunit,*)nll,pm
 c	read(iunit,*)
 c	call m_control(nll,pm)
 c
-	if(connect) allocate(convep(m,m),convap(m),vcon(m*(m+1)/2))
+
 C--MQL
         allocate (kcon(m),jcon(m,m))
 C--MQL ///
@@ -582,9 +586,9 @@ c	  end do
 c	 end if
 c
 c CONECTIVITAT
-c
-	if(connect) then
-	 call connectivity(m,etiq0,q,vcon)
+	if(contype.gt.0) then
+	  if (contype.eq.1) call connectivity(m,etiq0,q,vcon)
+
 C--MQL --
 c Escriptura
 c	 write(3,"(/2x,'Connectivity matrix')")
@@ -701,7 +705,7 @@ C--MQL
         kcon(:m)=0
         jcon(:m,:m)=0
         ncon=0
-        if (connect) then
+        if (contype.gt.0) then
           do ih=1,nll
             kdone=0
             do icon=1,ncon
@@ -795,7 +799,7 @@ c
  	  if(trim(etiq(ip(idc))).ne.
      .   trim(etiq(idc))) cycle PERMUT
 	end if
-	if (connect) then
+	if (contype.gt.0) then
 	 if(abs(convep(ip(idc),1)-convep(idc,1))
      &.gt.1.d-6) cycle PERMUT
 	end if

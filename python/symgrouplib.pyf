@@ -4,7 +4,7 @@
 python module symgrouplib ! in
     interface  ! in :symgroup
         subroutine symgroup(coordinates, multi, labels, central_atom, oper, oeix, centerfix, center, &
-        notconn, nat, s_max, NearStruc, vmax, optper, refAxis, sm, vm) ! in :symgrouplib:symgrouplib.F
+        conntype, vcon, thresh, nat, s_max, NearStruc, vmax, optper, refAxis, sm, vm) ! in :symgrouplib:symgrouplib.F
 
 !           Inputs
             integer, depend(coordinates), intent(hide) :: nat=shape(coordinates,0)
@@ -13,8 +13,11 @@ python module symgrouplib ! in
             character, dimension(nat), intent(in) :: labels*2
             integer, intent(in) :: multi, pm, oeix, central_atom
             character, intent(in) :: oper*1
-            logical, intent(in) :: centerfix, notconn
+            logical, intent(in) :: centerfix
+            integer, intent(in) :: conntype
             real*8, dimension(3), intent(in) :: center
+            real*8, dimension(nat*(nat+1)/2), intent(in) :: vcon
+            real*8, intent(in) :: thresh
 
 !           Outputs
             real*8, intent(out) :: s_max

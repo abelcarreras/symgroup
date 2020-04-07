@@ -1,19 +1,42 @@
-__version__ = '0.3.2'
+__version__ = '0.4.0'
 
 from symgroupy import symgrouplib
 import numpy as np
 
 
+def _get_connectivity_vector(connect, na, central_atom=0):
+
+    matrix = np.zeros((na, na), dtype=float)
+
+    try:
+        for pair in connect:
+            matrix[pair[0]-1, pair[1]-1] = 1.0
+            matrix[pair[1]-1, pair[0]-1] = 1.0
+
+        if central_atom > 0:
+            matrix = np.vstack((matrix, matrix[central_atom-1, :]))
+            matrix = np.hstack((matrix, matrix[:, central_atom-1][None].T))
+
+            matrix = np.delete(matrix, central_atom-1, axis=0)
+            matrix = np.delete(matrix, central_atom-1, axis=1)
+    except TypeError:
+        pass
+
+    return np.ascontiguousarray(matrix[np.tril_indices(na)])
+
+
 class Symgroupy:
     def __init__(self,
-                 coordinates,                # Cartesian coordinates
+                 coordinates,                # coordinates in angstrom
                  group,                      # symmetry point group
                  multi=1,                    # multiple measures
                  labels=None,                # atomic symbols (or other representative labels)
                  central_atom=None,          # Atom number that contains the center atom (if exist)
-                 ignore_connectivity=False,  # ignore connectivity
+                 connectivity='auto',        # use connectivity from atomic radii
+                 connect_thresh=1.10,        # threshold to use in connectivity='auto'
                  center=None):               # Center of symmetry measure (if None: search optimum)
 
+        conv = _get_connectivity_vector(connectivity, len(coordinates), central_atom)
         if central_atom is None:
             central_atom = 0
 
@@ -29,15 +52,23 @@ class Symgroupy:
         else:
             fixcenter = True
 
+        if connectivity is None:
+            connect_type = 0
+        elif connectivity == 'auto':
+            connect_type = 1
+        else:
+            connect_type = 2
+
         if labels is None:
             labels = ['{}'.format(i) for i in range(len(coordinates))]
-            ignore_connectivity = True
+            connect_type = 0
 
         labels = np.array([list('{:<2}'.format(char)) for char in labels], dtype='S')
         coordinates = np.ascontiguousarray(coordinates)
 
         outputs = symgrouplib.symgroup(coordinates, multi, labels, central_atom, operation,
-                                       operation_axis, fixcenter, center, ignore_connectivity)
+                                       operation_axis, fixcenter, center, connect_type, conv,
+                                       connect_thresh)
 
         # Reorganize outputs
         self._csm = outputs[0]
@@ -93,13 +124,15 @@ if __name__ == '__main__':
     # cn: rotation (n:order)
     # sn: improper rotation (n:order)
 
+    bonds = [(1, 2), (1, 3), (1, 4), (1, 5)]  # pairs of atoms
+
     fen4 = Symgroupy(coordinates=cart_coordinates,
                      group='c4',
                      multi=3,
                      labels=['C', 'H', 'H', 'H', 'H'],
                      central_atom=1,
                      center=[-0.15936255,   -0.27888446,    0.00000000],
-                     ignore_connectivity=True,
+                     connectivity='auto',
                      )
 
     print('CSM: {}'.format(fen4.csm))
