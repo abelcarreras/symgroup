@@ -1,4 +1,4 @@
-__version__ = '0.4.1'
+__version__ = '0.4.2'
 
 from symgroupy import symgrouplib
 import numpy as np
@@ -130,7 +130,7 @@ if __name__ == '__main__':
     bonds = [(1, 2), (1, 3), (1, 4), (1, 5)]  # pairs of atoms
 
     fen4 = Symgroupy(coordinates=cart_coordinates,
-                     group='zc4',
+                     group='c4',
                      multi=3,
                      labels=['C', 'H', 'H', 'H', 'H'],
                      central_atom=1,
