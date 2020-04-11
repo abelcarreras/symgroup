@@ -1,7 +1,8 @@
 
        subroutine symgroup(coordinates, Nmulti_inp,
-     &symbols, pm, oper, oeix, cfix, center_coor, contype, vcon,
-     & c_thresh, m, s_max, NearStruc, v_max, optper, refAxis, sm, vm)
+     & symbols, pm, oper, oeix, cfix, center_coor, contype, vcon,
+     & c_thresh, fixpermu, m, s_max, NearStruc, v_max, optper,
+     & refAxis, sm, vm)
 c
 c
 c   Aquest programa mesura la distancia entre un estructura i l'estructura
@@ -34,6 +35,7 @@ c  nvecs  nombre d'atoms a partir dels quals es defineix l'orientacio de l'eix (
 c  dvmax  modul al quadrat del l'orientacio (fixada) de l'eix (Cn o Sn)
 c  Nmulti numero de mesures per cada estructura (maxim valor 10)
 c  ptotal conjunt d'estructures que genera el grup
+c  fixpermu fixar la permutació a 1 2 3 4 5 6...
 c-----------------------------------------------------------
 	integer	     :: m,pm,nll,es,dimr,i_oper,nvecs,noper,
      .                    oeix,Nmulti,iunit, contype
@@ -66,7 +68,7 @@ c	double precision,allocatable :: convep(:,:),convap(:),vcon(:)
  	double precision,allocatable :: theta(:),ctheta(:),stheta(:),ttheta(:)
       character*8,allocatable ::       etiq0(:),etiq(:)
 C--MQL
-        logical :: mute
+        logical :: mute, fixpermu
         integer, allocatable :: kcon(:), jcon(:,:)
 c        character :: yn*1    ! DCC: this version always runs
         integer :: npmt(4), khg
@@ -304,6 +306,13 @@ c         read(55,*)(ipf(j),j=1,5)
 c         close(55)
 c        end if
 
+c     Fix permutation
+      if(fixpermu) then
+      permu =.true.
+        DO k=1,m
+          ipf(k)=k ! Group
+        ENDDO
+      end if
 
 c Coordinates assignation
       kka = 1

@@ -1,4 +1,4 @@
-__version__ = '0.4.0'
+__version__ = '0.4.1'
 
 from symgroupy import symgrouplib
 import numpy as np
@@ -34,6 +34,7 @@ class Symgroupy:
                  central_atom=None,          # Atom number that contains the center atom (if exist)
                  connectivity='auto',        # use connectivity from atomic radii
                  connect_thresh=1.10,        # threshold to use in connectivity='auto'
+                 fix_permutation=False,      # fix permutation
                  center=None):               # Center of symmetry measure (if None: search optimum)
 
         conv = _get_connectivity_vector(connectivity, len(coordinates), central_atom)
@@ -68,7 +69,7 @@ class Symgroupy:
 
         outputs = symgrouplib.symgroup(coordinates, multi, labels, central_atom, operation,
                                        operation_axis, fixcenter, center, connect_type, conv,
-                                       connect_thresh)
+                                       connect_thresh, fix_permutation)
 
         # Reorganize outputs
         self._csm = outputs[0]
@@ -131,6 +132,7 @@ if __name__ == '__main__':
                      multi=3,
                      labels=['C', 'H', 'H', 'H', 'H'],
                      central_atom=1,
+                     fix_permutation=False,
                      center=[-0.15936255,   -0.27888446,    0.00000000],
                      connectivity='auto',
                      )
