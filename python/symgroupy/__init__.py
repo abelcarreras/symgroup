@@ -46,6 +46,8 @@ class Symgroupy:
             operation_axis = int(group[1])
         except IndexError:
             operation_axis = 1
+        except ValueError:
+            raise Exception('Wrong symmetry label')
 
         if center is None:
             fixcenter = False
@@ -128,7 +130,7 @@ if __name__ == '__main__':
     bonds = [(1, 2), (1, 3), (1, 4), (1, 5)]  # pairs of atoms
 
     fen4 = Symgroupy(coordinates=cart_coordinates,
-                     group='c4',
+                     group='zc4',
                      multi=3,
                      labels=['C', 'H', 'H', 'H', 'H'],
                      central_atom=1,
