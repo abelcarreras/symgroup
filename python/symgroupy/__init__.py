@@ -1,4 +1,4 @@
-__version__ = '0.4.2'
+__version__ = '0.4.3'
 
 from symgroupy import symgrouplib
 import numpy as np
@@ -43,7 +43,7 @@ class Symgroupy:
 
         operation = group[0].lower().encode('ascii')
         try:
-            operation_axis = int(group[1])
+            operation_axis = int(group[1:])
         except IndexError:
             operation_axis = 1
         except ValueError:
@@ -150,3 +150,37 @@ if __name__ == '__main__':
     print(fen4.cms_multi)
     print('multi axis')
     print(fen4.axis_multi)
+
+    print('\n\n')
+
+    cart_coordinates = [[ 2.756888080, -0.000000000, 0.000000000],
+                        [ 2.090404324,  1.404011560, 0.000000000],
+                        [ 1.021653372,  2.471437166, 0.000000000],
+                        [-0.528304382,  2.333764742, 0.000000000],
+                        [-1.813582469,  1.860517986, 0.000000000],
+                        [-2.452704063,  0.710363638, 0.000000000],
+                        [-2.452704063, -0.710363638, 0.000000000],
+                        [-1.813582469, -1.860517986, 0.000000000],
+                        [-0.528304382, -2.333764742, 0.000000000],
+                        [ 1.021653372, -2.471437166, 0.000000000],
+                        [ 2.090404324, -1.404011560, 0.000000000]]
+
+    measure = Symgroupy(coordinates=cart_coordinates,
+                        group='c11',
+                        labels=['O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O'],
+                        fix_permutation=True,
+                        connectivity='auto',
+                        )
+
+    print('CSM: {}'.format(measure.csm))
+    print('Optimum axis: {}'.format(measure.optimum_axis))
+    print('Optimum permutation: {}'.format(measure.optimum_permutation))
+    print('Nearest structure')
+    print(measure.nearest_structure)
+    print('Reference axis')
+    print(measure.reference_axis)
+    print('multi CMS')
+    print(measure.cms_multi)
+    print('multi axis')
+    print(measure.axis_multi)
+
