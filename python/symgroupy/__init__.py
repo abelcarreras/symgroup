@@ -1,4 +1,4 @@
-__version__ = '0.4.3'
+__version__ = '0.5.0'
 
 from symgroupy import symgrouplib
 import numpy as np
@@ -32,9 +32,9 @@ class Symgroupy:
                  multi=1,                    # multiple measures
                  labels=None,                # atomic symbols (or other representative labels)
                  central_atom=None,          # Atom number that contains the center atom (if exist)
-                 connectivity='auto',        # use connectivity from atomic radii
+                 connectivity=None,          # Connectivity between atoms
                  connect_thresh=1.10,        # threshold to use in connectivity='auto'
-                 fix_permutation=False,      # fix permutation
+                 permutation=None,           # fix permutation
                  center=None):               # Center of symmetry measure (if None: search optimum)
 
         conv = _get_connectivity_vector(connectivity, len(coordinates), central_atom)
@@ -55,23 +55,29 @@ class Symgroupy:
         else:
             fixcenter = True
 
-        if connectivity is None:
+        if connectivity is None:       # not use connectivity
             connect_type = 0
-        elif connectivity == 'auto':
+        elif connectivity == 'auto':   # use connectivity from atomic radii
             connect_type = 1
         else:
-            connect_type = 2
+            connect_type = 2          # custom connectivity by user
 
         if labels is None:
             labels = ['{}'.format(i) for i in range(len(coordinates))]
             connect_type = 0
+
+        if permutation is None:
+            permutation = [0] * len(coordinates)
+            fix_permutation = False
+        else:
+            fix_permutation = True
 
         labels = np.array([list('{:<2}'.format(char)) for char in labels], dtype='S')
         coordinates = np.ascontiguousarray(coordinates)
 
         outputs = symgrouplib.symgroup(coordinates, multi, labels, central_atom, operation,
                                        operation_axis, fixcenter, center, connect_type, conv,
-                                       connect_thresh, fix_permutation)
+                                       connect_thresh, fix_permutation, permutation)
 
         # Reorganize outputs
         self._csm = outputs[0]
@@ -134,7 +140,6 @@ if __name__ == '__main__':
                      multi=3,
                      labels=['C', 'H', 'H', 'H', 'H'],
                      central_atom=1,
-                     fix_permutation=False,
                      center=[-0.15936255,   -0.27888446,    0.00000000],
                      connectivity='auto',
                      )
@@ -168,7 +173,6 @@ if __name__ == '__main__':
     measure = Symgroupy(coordinates=cart_coordinates,
                         group='c11',
                         labels=['O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O'],
-                        fix_permutation=True,
                         connectivity='auto',
                         )
 
@@ -184,3 +188,40 @@ if __name__ == '__main__':
     print('multi axis')
     print(measure.axis_multi)
 
+    cart_coordinates = [[ 0.506643354, -1.227657970, 0.000000000],
+                        [ 1.303068499,  0.000000000, 0.000000000],
+                        [ 0.506643354,  1.227657970, 0.000000000],
+                        [-0.926250976,  0.939345948, 0.000000000],
+                        [-0.926250976, -0.939345948, 0.000000000],
+                        ]
+
+    measure = Symgroupy(coordinates=cart_coordinates,
+                        group='C5',
+                        labels=['C', 'C', 'C', 'C', 'C'],
+                        connectivity=[(1,2), (2,3), (3,4), (4,5), (5,1)],
+                        )
+
+    print('CSM: {}'.format(measure.csm))
+    print('Optimum permutation: {}'.format(measure.optimum_permutation))
+
+    print('*******************')
+
+    measure = Symgroupy(coordinates=cart_coordinates,
+                        group='C5',
+                        labels=['C', 'C', 'C', 'C', 'C'],
+                        connectivity=None,
+                        permutation=[5, 1, 2, 3, 4]
+                        )
+
+    print('-----------')
+    print('CSM: {}'.format(measure.csm))
+    print('Optimum axis: {}'.format(measure.optimum_axis))
+    print('Optimum permutation: {}'.format(measure.optimum_permutation))
+    print('Nearest structure')
+    print(measure.nearest_structure)
+    print('Reference axis')
+    print(measure.reference_axis)
+    print('multi CMS')
+    print(measure.cms_multi)
+    print('multi axis')
+    print(measure.axis_multi)

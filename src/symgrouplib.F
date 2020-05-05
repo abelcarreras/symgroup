@@ -1,8 +1,8 @@
 
        subroutine symgroup(coordinates, Nmulti_inp,
      & symbols, pm, oper, oeix, cfix, center_coor, contype, vcon,
-     & c_thresh, fixpermu, m, s_max, NearStruc, v_max, optper,
-     & refAxis, sm, vm)
+     & c_thresh, fixpermu, ipf, m, s_max, NearStruc, v_max,
+     & optper, refAxis, sm, vm)
 c
 c
 c   Aquest programa mesura la distancia entre un estructura i l'estructura
@@ -38,12 +38,12 @@ c  ptotal conjunt d'estructures que genera el grup
 c  fixpermu fixar la permutació a 1 2 3 4 5 6...
 c-----------------------------------------------------------
 	integer	     :: m,pm,nll,es,dimr,i_oper,nvecs,noper,
-     .                    oeix,Nmulti,iunit, contype
+     .              oeix,Nmulti,iunit, contype, stnewton
 	double precision :: pi,s,s_max,A
 	double precision :: vecnorm(3),vmax(3),v(3),dvmax
       double precision :: sm(20),vm(20,3)
       character        :: oper*1,name*40
-      character        :: input*80,title*80,line*80
+      character        :: title*80,line*80
 	logical	     :: keyctrl,pla_ctrl,ctrl_nvecs,group
 	logical	     :: label,multi,hconv,connect,permu,
      &            atfix,rfix,dim2D,csd,nolabel,centerfix,cfix
@@ -60,7 +60,7 @@ c
      &        "81","82","83","84","85","86","87","88","89","90" /)
 c
 	logical, allocatable ::	     ctrl(:)
-	integer, allocatable ::      ip(:),ipf(:),ivecs(:),ivecs0(:)
+	integer, allocatable ::      ip(:),ivecs(:),ivecs0(:)
       double precision,allocatable :: q(:,:),q0(:,:),qf(:,:)
       double precision,allocatable :: p(:,:,:),ptotal(:,:,:)  ! Group
 c	double precision,allocatable :: convep(:,:),convap(:),vcon(:)
@@ -79,9 +79,10 @@ c        character :: yn*1    ! DCC: this version always runs
       integer :: Nmulti_inp
       character, dimension(m) :: symbols*2
       real*8, dimension(3) :: v_max
-      integer, dimension(m) :: optper
+      integer, dimension(m) :: optper, ipf
       real*8, dimension(4,3) :: refAxis
       real*8 :: thresh, c_thresh
+
 C--MQL ///
 c
 	common  /int1/dimr
@@ -91,6 +92,7 @@ c
       common /intlog/Nmulti
       common /center/cm
       common /sumrad/thresh
+      common /check/stnewton
 
 C--MQL --
         common /logical/label,multi,hconv,permu,atfix,
@@ -142,117 +144,6 @@ c      Updated things
       Nmulti = nmulti_inp
       if (Nmulti.gt.0) multi = .true.
       label = .true.
-      input = 'test'
-
-c Read input file name (first argument)
-c      CALL getarg(1,input)
-c      IF (trim(input).eq.'') THEN
-c        write(0,*) 'No input file provided'
-c        write(0,*) 'usage: ./symgroup input_file'
-c        stop
-c      ENDIF
-
-	IF (trim(input).eq.'+') THEN
-c       open(unit=33,file="operations.dat",status='unknown')
-	  write(6,*)' '
-        write(6,*)'* Identity Symmetry'
-        write(6,*)'  E'
-        write(6,*)' '
-	  write(6,*)'* Inversion Symmetry Group'
-	  write(6,*)'  Ci'
-        write(6,*)' '
-        write(6,*)'* Reflection Symmetry Group'
-        write(6,*)'  Cs'
-        write(6,*)' '
-	  write(6,*)'* Rotational Symmetry Group'
-	  write(6,*)'  C n       n: rotation order'
-        write(6,*)' '
-        write(6,*)'* Rotation-Reflection Symmetry Group'
-        write(6,*)'  S n       n: rotation-reflection order'
-        write(6,*)' '
-        write(6,*)' '
-c       close(33)
-	  goto 9999
-	ENDIF
-c
-       IF (trim(input).eq.'+keywords') THEN
-c      open(unit=33,file="keywords.dat",status='unknown')
-        write(6,*)' '
-        write(6,"('%LABEL     Comparing vertices with the same label')")
-        write(6,"('%MULTI m   m best measures (file .zout2)')")
-        write(6,"(
-     &'%PERMU     Measure with the permutation in .zper file')")
-c       write(6,"('%ATFIX     Fix the symmetry element using m atoms')")
-c       write(6,"('%RFIX      Fix the symmetry element orientation')")
-        write(6,"(
-     &'%CENTERFIX Fix the center of the symmetry element')")
-        write(6,"('%2D        2D measure')")
-        write(6,"('%CSD       Structures from file .cor (CSD)')")
-        write(6,"('%CONNECT   Comparing vertices by the connectivity')")
-        write(6,"('%NOLABEL   Structures without labels')")
-c       write(6,"('%HCONV     High convergence')")
-        write(6,*)' '
-c       close(33)
-        GOTO 9999
-	ENDIF
-c
-c Open I/O files
-      k=max(len_trim(input),5)
-      if (input(k-4:k).eq.'.zdat') input(k-4:k)='    '
-c      open(unit=1,file=trim(input)//".zdat",status='old',iostat=k)
-c      open(unit=2,file=trim(input)//".ztab",status='unknown')
-c      open(unit=3,file=trim(input)//".zout",status='unknown')
-
-c Write Header to .zout file
-c      write(3,*)' '
-c      write(3,*)'  *********************************************'
-c      write(3,*)'  *    Welcome to the SYMGROUP Program v0     *'
-c      write(3,*)'  *                                           *'
-c      write(3,*)'  *   Continuous Symmetry Group calculation   *'
-c      write(3,*)'  *********************************************'
-c      write(3,*)' '
-c      write(3,*)' by David Casanova'
-c      write(3,*)' (c) 2009 Electronic Structure Group'
-c      write(3,*)'            Universitat de Barcelona'
-c      write(3,*)' '
-
-c Write Header to .ztab file
-c      write(2,*)' '
-c      write(2,*)'  *********************************************'
-c      write(2,*)'  *    Welcome to the SYMGROUP Program v0     *'
-c      write(2,*)'  *                                           *'
-c      write(2,*)'  *   Continuous Symmetry Group calculation   *'
-c      write(2,*)'  *********************************************'
-c      write(2,*)' '
-c      write(2,*)' by David Casanova'
-c      write(2,*)' (c) 2009 Electronic Structure Group'
-c      write(2,*)'            Universitat de Barcelona'
-c      write(2,*)' '
-
-c      if (k.eq.0) then
-c       write(0,*)' '
-c       write(0,"('Reading data from file ',a)") trim(input)//'.zdat...'
-c       write(0,*)' '
-c      else
-c       write(0,"('File not found')")
-c      end if
-
-c	call nextline(iunit)
-c	read(iunit,"(a)") line
-c	if((line(1:1).eq.'$').and.(len_trim(title).eq.0)) then
-c	 title(1:79)=line(2:80)
-c	 call nextline(iunit)
-c	 read(iunit,"(a)") line
-c	end if
-c	do while (keyctrl)
-c	 if((line(1:1).eq.'%').and.(len_trim(line).gt.1)) then
-c	  call options(line)
-c	  call nextline(iunit)
-c	  read(iunit,"(a)") line
-c	 else
-c	  keyctrl=.false.
-c	 end if
-c	end do
 
 c At the moment, fixing orientation (atfix or rfix) not ready.
 	IF (atfix .OR. rfix) THEN
@@ -279,12 +170,12 @@ C--MQL ///
 c       allocate(q(m,3),q0(m,3),p(m,3),qf(m,3)) Group
         allocate(q(m,3),q0(m,3),qf(m,3))
         allocate(etiq0(m),etiq(m))
-        allocate(ip(m),ipf(m),ivecs(m),ivecs0(m))
+        allocate(ip(m),ivecs(m),ivecs0(m))
 	allocate(ctrl(m))
 
 c Initialize to 0
         do i = 1,m
-           ipf(i) = 0
+c           ipf(i) = 0
            ip(i) = 0
            ivecs(i) = 0
            ivecs0(i) = 0
@@ -308,9 +199,10 @@ c        end if
 
 c     Fix permutation
       if(fixpermu) then
-      permu =.true.
+        permu =.true.
+      else
         DO k=1,m
-          ipf(k)=k ! Group
+          ipf(k)=0 ! Group
         ENDDO
       end if
 
@@ -529,56 +421,6 @@ c-------------------------------------------------------
 c	STRUCTURES: do es=1,9999999
 	STRUCTURES: do es=1,1
 
-c	 call nextline(iunit)
-c	 read(iunit,"(a)",end=11, IOSTAT=iostat) name
-c	 if (iostat.gt.0) exit
-c 	 write(3,'(a10)') name
-c	 write(3,*)' '
-c	 ivecs(:)=ivecs0(:)
-c	 k=0
-c	if(atfix) then
-c         do j=1,nvecs
-c          if(ivecs(j).eq.pm) ivecs(j)=m
-c         end do
-c	end if
-c	 do i=1,m
-c	  if (i.eq.pm) then
-c	   write(6,*) 'pm', pm
-c	   call nextline(iunit)
-c	   if(nolabel)then
-c	    read(iunit,*)(q0(m,j),j=1,3)
-c	   else
-c	    read(iunit,"(a)")line
-c            line=adjustl(line)
-c            l=index(line,' ')
-c	    etiq0(m)=line(1:l)
-c	    line(1:l)=' '
-c	    read(line,*)(q0(m,j),j=1,3)
-c	   end if
-c	  else
-c	   k=k+1
-c           call nextline(iunit)
-c	   if(nolabel)then
-c            read(iunit,*)(q0(k,j),j=1,3)
-c           else
-c	    read(iunit,"(a)")line
-c            line=adjustl(line)
-c            l=index(line,' ')
-c            etiq0(k)=line(1:l)
-c            line(1:l)=' '
-c            read(line,*)(q0(k,j),j=1,3)
-c	    if (atfix) then
-c	     do j=1,nvecs
-c	      if(ivecs(j).eq.i) ivecs(j)=k
-c	     end do
-c	    end if
-c	   end if
-c	  end if
-c	 end do
-
-c      write(6,*)  es
-c
-c
 c   Coloquem la molecula al centre de masses
 c
 	 call cmasses(q0,q,m,centerfix)
@@ -694,11 +536,18 @@ c----------------------------------
 c----------------------------------
 c Permutacio unica
 	IF (permu) THEN
-        DO k=1,m
-          p(1,k,:)=q(ipf(k),:) ! Group
+      DO k = 1,m
+	    p(1,k,:) = q(ipf(k),:)
+	  ENDDO
+
+      IF ((i_oper.ge.3).and.(oeix.ge.3)) THEN
+        DO l=2,noper
+          DO k=1,m
+            p(l,k,:)=p(l-1,ipf(k),:)
+          ENDDO
         ENDDO
-c	  call mesura(i_oper,q,p,m,s_max,vmax)
-	  call mesura(oeix,i_oper,1,q,p,m,s_max,vmax,
+      ENDIF
+	    call mesura(oeix,i_oper,noper,q,p,m,s_max,vmax,
      .                  ctheta,stheta,ttheta) ! Group
 	  goto 101
 	ENDIF
