@@ -1,4 +1,4 @@
-__version__ = '0.5.0'
+__version__ = '0.5.1'
 
 from symgroupy import symgrouplib
 import numpy as np
@@ -156,7 +156,7 @@ if __name__ == '__main__':
     print('multi axis')
     print(fen4.axis_multi)
 
-    print('\n\n')
+    print('---')
 
     cart_coordinates = [[ 2.756888080, -0.000000000, 0.000000000],
                         [ 2.090404324,  1.404011560, 0.000000000],
