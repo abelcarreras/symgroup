@@ -1,4 +1,4 @@
-__version__ = '0.5.1'
+__version__ = '0.5.2'
 
 from symgroupy import symgrouplib
 import numpy as np
@@ -47,7 +47,10 @@ class Symgroupy:
         except IndexError:
             operation_axis = 1
         except ValueError:
-            raise Exception('Wrong symmetry label')
+            if operation in [b'i', b'r', b'e']:  # accepted operations
+                operation_axis = 0
+            else:
+                raise Exception('Wrong symmetry label')
 
         if center is None:
             fixcenter = False
