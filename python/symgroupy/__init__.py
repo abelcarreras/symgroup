@@ -1,4 +1,4 @@
-__version__ = '0.5.3'
+__version__ = '0.5.4'
 
 from symgroupy import symgrouplib
 import numpy as np
@@ -44,10 +44,11 @@ class Symgroupy:
         operation = group[0].lower().encode('ascii')
         try:
             operation_axis = int(group[1:])
-        except IndexError:
-            operation_axis = 1
         except ValueError:
-            if operation in [b'i', b'r', b'e']:  # accepted operations
+            if group in ['cs', 'ci']:
+                operation = {'cs': 'r', 'ci': 'i'}[group]
+                operation_axis = -1
+            elif operation in [b'i', b'r', b'e']:  # accepted operations
                 operation_axis = 0
             else:
                 raise Exception('Wrong symmetry label')
@@ -89,6 +90,11 @@ class Symgroupy:
         self._axis_multi = outputs[6][:multi,:]
         self._center = center
 
+        # handle ci and cs groups
+        if operation_axis == -1:
+            self._csm = self._csm/2
+            self._csm_multi = self._csm_multi/2
+
     @property
     def csm(self):
         return self._csm
@@ -129,13 +135,15 @@ if __name__ == '__main__':
                         [0.19731029,    0.22551373,   -0.87365150],
                         [-1.22936255,   -0.27887127,    0.00000000]]
 
-
-# Symmetry point groups available:
+    # Symmetry operations available:
     # e: identity
     # i: inversion
     # r: reflection
+    # Symmetry point groups available:
     # cn: rotation (n:order)
     # sn: improper rotation (n:order)
+    # ci
+    # cs
 
     bonds = [(1, 2), (1, 3), (1, 4), (1, 5)]  # pairs of atoms
 
