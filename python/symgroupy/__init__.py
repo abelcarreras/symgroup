@@ -1,4 +1,4 @@
-__version__ = '0.5.2'
+__version__ = '0.5.3'
 
 from symgroupy import symgrouplib
 import numpy as np
@@ -53,10 +53,7 @@ class Symgroupy:
                 raise Exception('Wrong symmetry label')
 
         if center is None:
-            fixcenter = False
-            center= [0, 0, 0]
-        else:
-            fixcenter = True
+            center = np.average(coordinates, axis=0)
 
         if connectivity is None:       # not use connectivity
             connect_type = 0
@@ -79,7 +76,7 @@ class Symgroupy:
         coordinates = np.ascontiguousarray(coordinates)
 
         outputs = symgrouplib.symgroup(coordinates, multi, labels, central_atom, operation,
-                                       operation_axis, fixcenter, center, connect_type, conv,
+                                       operation_axis, True, center, connect_type, conv,
                                        connect_thresh, fix_permutation, permutation)
 
         # Reorganize outputs
@@ -90,6 +87,7 @@ class Symgroupy:
         self._reference_axis = outputs[4]
         self._csm_multi = outputs[5][:multi]
         self._axis_multi = outputs[6][:multi,:]
+        self._center = center
 
     @property
     def csm(self):
@@ -119,6 +117,9 @@ class Symgroupy:
     def axis_multi(self):
         return self._axis_multi
 
+    @property
+    def center(self):
+        return self._center
 
 if __name__ == '__main__':
 
@@ -158,6 +159,7 @@ if __name__ == '__main__':
     print(fen4.cms_multi)
     print('multi axis')
     print(fen4.axis_multi)
+    print('center', fen4.center)
 
     print('---')
 
