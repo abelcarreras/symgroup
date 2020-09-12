@@ -33,6 +33,16 @@ Installation instructions
 ```shell
 pip install symgroupy --user
 ```
+
+Usage
+-----
+```shell
+./symgroupy input.zdat
+```
+for further information check the manual at:  
+https://symgroup.readthedocs.io
+
+
 Python API
 ----------
 ```python
