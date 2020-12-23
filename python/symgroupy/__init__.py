@@ -1,4 +1,4 @@
-__version__ = '0.5.4'
+__version__ = '0.5.5'
 
 from symgroupy import symgrouplib
 import numpy as np
@@ -28,7 +28,7 @@ def _get_connectivity_vector(connect, na, central_atom=0):
 class Symgroupy:
     def __init__(self,
                  coordinates,                # coordinates in angstrom
-                 group,                      # symmetry point group
+                 group,                      # point symmetry group
                  multi=1,                    # multiple measures
                  labels=None,                # atomic symbols (or other representative labels)
                  central_atom=None,          # Atom number that contains the center atom (if exist)
@@ -45,13 +45,13 @@ class Symgroupy:
         try:
             operation_axis = int(group[1:])
         except ValueError:
-            if group in ['cs', 'ci']:
-                operation = {'cs': 'r', 'ci': 'i'}[group]
+            if group.lower() in ['cs', 'ci']:
+                operation = {'cs': 'r', 'ci': 'i'}[group.lower()]
                 operation_axis = -1
             elif operation in [b'i', b'r', b'e']:  # accepted operations
                 operation_axis = 0
             else:
-                raise Exception('Wrong symmetry label')
+                raise Exception('wrong symmetry group label: "{}"'.format(group))
 
         if center is None:
             center = np.average(coordinates, axis=0)
