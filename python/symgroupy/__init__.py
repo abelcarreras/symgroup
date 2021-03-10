@@ -1,4 +1,4 @@
-__version__ = '0.5.5'
+__version__ = '0.5.6'
 
 from symgroupy import symgrouplib
 import numpy as np
@@ -42,6 +42,11 @@ class Symgroupy:
             central_atom = 0
 
         operation = group[0].lower().encode('ascii')
+
+        # check if valid group label
+        if group[0].lower() not in ['c', 'e', 'i', 'r', 's']:
+            raise Exception('wrong symmetry group label: "{}"'.format(group))
+
         try:
             operation_axis = int(group[1:])
         except ValueError:
