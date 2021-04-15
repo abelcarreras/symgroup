@@ -58,7 +58,7 @@ class TestFeN4(unittest.TestCase):
         multi_csm_8_ref = [ 8.70279044,  8.70279106,  8.70279249,  8.70279305,
                             41.25136234, 63.29000792, 63.29001106, 63.42240444]
 
-        np.testing.assert_allclose(multi_csm_8_ref, self.fen4.cms_multi, rtol=1e-6)
+        np.testing.assert_allclose(multi_csm_8_ref, self.fen4.csm_multi, rtol=1e-6)
 
     def test_multi_axis(self):
 
@@ -121,7 +121,7 @@ class TestFeN4_2(unittest.TestCase):
 
         multi_csm_8_ref = [ 2.631097, 2.879698, 2.890738]
 
-        np.testing.assert_allclose(multi_csm_8_ref, self.fen4.cms_multi, rtol=1e-6)
+        np.testing.assert_allclose(multi_csm_8_ref, self.fen4.csm_multi, rtol=1e-6)
 
     def test_multi_axis(self):
 
