@@ -19,19 +19,10 @@ except DistutilsFileError:
 
 s_dir = 'src/'
 
-# If windows
-if sys.platform.startswith('win'):
-    libraries = []
-    #libraries = ['lapack', 'refblas']
-    with open('setup.cfg', 'w') as f:
-        f.write('[build_ext]\ninplace=1\nlibraries=lapack,refblas')
-else:
-    libraries=['lapack', 'blas'],
-
 symgroupy = Extension('symgroupy.symgrouplib',
                       # include_dirs=include_dirs_numpy,
                       extra_f77_compile_args=['-ffixed-line-length-0'],
-                      libraries=libraries,
+                      # libraries=['lapack', 'blas'],
                       sources=['symgrouplib.pyf',
                                s_dir + 'symgrouplib.F',
                                s_dir + 'radius.F',
@@ -50,8 +41,7 @@ setup(name='symgroupy',
       packages=['symgroupy'],
       package_data={"": ["*.dll"],},
       include_package_data=True,
-      ext_modules=[symgroupy],
-      setup_cfg=True)
+      ext_modules=[symgroupy])
 
 # If windows
 if sys.platform.startswith('win'):
