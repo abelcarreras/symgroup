@@ -1,4 +1,6 @@
 from numpy.distutils.core import setup, Extension
+from numpy.distutils.command.install import install as _install
+
 from distutils.dir_util import copy_tree
 from distutils.errors import DistutilsFileError
 import os, sys
@@ -33,6 +35,17 @@ symgroupy = Extension('symgroupy.symgrouplib',
                                s_dir + 'measure.F',
                                s_dir + 'operations.F'])
 
+class PostInstallCommand(_install):
+    def run(self):
+        _install.run(self)
+        # If windows
+        from shutil import copyfile
+        dir = os.path.dirname(__file__)
+        files = os.listdir(dir + '/symgroupy/.libs')
+        for file in files:
+            filename = os.path.join(dir, 'symgroupy', '.libs', file)
+            copyfile(filename, os.path.join(dir, 'symgroupy', file))
+
 setup(name='symgroupy',
       version=get_version_number(),
       description='symgroupy',
@@ -40,14 +53,6 @@ setup(name='symgroupy',
       author_email='abelcarreras83@gmail.com',
       packages=['symgroupy'],
       package_data={"": ["*.dll"],},
+      cmdclass={'install': PostInstallCommand},
       include_package_data=True,
       ext_modules=[symgroupy])
-
-# If windows
-if sys.platform.startswith('win'):
-    from shutil import copyfile
-    dir = os.path.dirname(__file__)
-    files = os.listdir(dir + '/symgroupy/.libs')
-    for file in files:
-        filename = os.path.join(dir, 'symgroupy','.libs', file)
-        copyfile(filename, os.path.join(dir, 'symgroupy', file))
