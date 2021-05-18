@@ -1,2 +1,2 @@
-include *.dll
-include *.pyd
+global-include *.py[cod]
+global-include *.pyd
