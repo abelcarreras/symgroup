@@ -60,6 +60,7 @@ setup(name='symgroupy',
       author_email='abelcarreras83@gmail.com',
       packages=['symgroupy'],
       package_data={"": ["*.dll", "*.pyd"],},
-      cmdclass={'install': PostInstallCommand},
+      # Windows support
+      cmdclass={'install': PostInstallCommand} if sys.platform.startswith('win') else {},
       include_package_data=True,
       ext_modules=[symgroupy])
