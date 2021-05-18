@@ -1,6 +1,6 @@
 from numpy.distutils.core import setup, Extension
 from numpy.distutils.command.install import install as _install
-
+from distutils.sysconfig import get_python_lib
 from distutils.dir_util import copy_tree
 from distutils.errors import DistutilsFileError
 import os, sys
@@ -45,6 +45,13 @@ class PostInstallCommand(_install):
         for file in files:
             filename = os.path.join(dir, 'symgroupy', '.libs', file)
             copyfile(filename, os.path.join(dir, 'symgroupy', file))
+
+        site_dir = get_python_lib()
+        files = [f for f in os.listdir('./symgroupy/') if os.path.isfile('./symgroupy/' + f)]
+        for file in files:
+            filename = os.path.join(dir, 'symgroupy', file)
+            print('file', filename)
+            copyfile(filename, os.path.join(site_dir, 'symgroupy', file))
 
 setup(name='symgroupy',
       version=get_version_number(),
