@@ -45,6 +45,7 @@ https://symgroup.readthedocs.io
 
 Python API
 ----------
+
 ```python
 from symgroupy import Symgroupy
 
@@ -65,8 +66,8 @@ print('Nearest structure')
 print(fen4.nearest_structure)
 print('Reference axis')
 print(fen4.reference_axis)
-print('multi CMS')
-print(fen4.cms_multi)
+print('multi CSM')
+print(fen4.csm_multi)
 print('multi axis')
 print(fen4.axis_multi)
 

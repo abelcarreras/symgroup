@@ -1,4 +1,4 @@
-__version__ = '0.5.6'
+__version__ = '0.5.7'
 
 from symgroupy import symgrouplib
 import numpy as np
@@ -121,7 +121,7 @@ class Symgroupy:
         return self._reference_axis
 
     @property
-    def cms_multi(self):
+    def csm_multi(self):
         return self._csm_multi
 
     @property
@@ -168,8 +168,8 @@ if __name__ == '__main__':
     print(fen4.nearest_structure)
     print('Reference axis')
     print(fen4.reference_axis)
-    print('multi CMS')
-    print(fen4.cms_multi)
+    print('multi CSM')
+    print(fen4.csm_multi)
     print('multi axis')
     print(fen4.axis_multi)
     print('center', fen4.center)
@@ -201,8 +201,8 @@ if __name__ == '__main__':
     print(measure.nearest_structure)
     print('Reference axis')
     print(measure.reference_axis)
-    print('multi CMS')
-    print(measure.cms_multi)
+    print('multi CSM')
+    print(measure.csm_multi)
     print('multi axis')
     print(measure.axis_multi)
 
@@ -239,7 +239,7 @@ if __name__ == '__main__':
     print(measure.nearest_structure)
     print('Reference axis')
     print(measure.reference_axis)
-    print('multi CMS')
-    print(measure.cms_multi)
+    print('multi CSM')
+    print(measure.csm_multi)
     print('multi axis')
     print(measure.axis_multi)
