@@ -41,4 +41,9 @@ setup(name='symgroupy',
       author='Abel Carreras',
       author_email='abelcarreras83@gmail.com',
       packages=['symgroupy'],
-      ext_modules=[symgroupy])
+      ext_modules=[symgroupy],
+      url='https://github.com/abelcarreras/symgroup',
+      classifiers=[
+          "Programming Language :: Python",
+          "License :: OSI Approved :: MIT License"]
+      )
