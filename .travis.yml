@@ -32,14 +32,14 @@ after_success:
   - coveralls
   - cd ..
 
-deploy:
-  - provider: pypi
-    distributions: sdist
-    user: abelcarreras83
-    password:
-      secure: "HeN6+WSbg6KXqyyq6aZlzR1Pfy8OY721O/UJITSWbUt06tWUJJn23OQEzlUWNGcnr0iAlHJEcY1+SkO9KgEbtm7efc3BiY8SMVnOsCLIOxR/ZGvmfPOCb9WSpHt380/zs1MlxE+ST82vu+nb00VX76mGCtoduffhvAsLqxzQapImswRgA6BP9hfUyPSQrIL+QmgtmMMDDuP8/vdyyaKUeSx28fkzT3WoCog2RmX4QjovdixmCU6hz/WXKCgXN+DdFleuxiY7jD+9id3Ei4ywCfbPQbyaz59PABIHcyRPOmh2tE+DTmleO0T1I5x19VuANZDzEstccGdxHCocPmC58E3LWxAdaVStuM0zxqTOwwVKlm1s93SicSwmcTTCX1W1jdfCdW2GP9irQGesZ5F+imyiizpLUQ/PhNq1UHalubu1XQHUrzsReXZuz4gGb2HbUL+3ul93fhlBvhNdHCeTYromawd7J0muP56q8JoHPHuYkqdpW7yq7YmmccArbCq3VErvHH4uiaX6UNVWlj93Q6O74zCDEoh257Fyasgx0tNoohUAUP5hUkFlf7++qFXzxA+gaLOymx6tKzDdAnvBvToq1eBjS9zYNK8RGOmq57N/2HxiNJu5pV4P1Wnj9t6N+LBzD/VgzSW2uyobrnKNHnRfeWmiGuSOwYxFlN5hJ7g="
-    skip_existing: true
-    on:
-      branch: master
-      tags: false
-      condition: $TRAVIS_PYTHON_VERSION != "2.7"
+#deploy:
+#  - provider: pypi
+#    distributions: sdist
+#    user: abelcarreras83
+#    password:
+#      secure: "HeN6+WSbg6KXqyyq6aZlzR1Pfy8OY721O/UJITSWbUt06tWUJJn23OQEzlUWNGcnr0iAlHJEcY1+SkO9KgEbtm7efc3BiY8SMVnOsCLIOxR/ZGvmfPOCb9WSpHt380/zs1MlxE+ST82vu+nb00VX76mGCtoduffhvAsLqxzQapImswRgA6BP9hfUyPSQrIL+QmgtmMMDDuP8/vdyyaKUeSx28fkzT3WoCog2RmX4QjovdixmCU6hz/WXKCgXN+DdFleuxiY7jD+9id3Ei4ywCfbPQbyaz59PABIHcyRPOmh2tE+DTmleO0T1I5x19VuANZDzEstccGdxHCocPmC58E3LWxAdaVStuM0zxqTOwwVKlm1s93SicSwmcTTCX1W1jdfCdW2GP9irQGesZ5F+imyiizpLUQ/PhNq1UHalubu1XQHUrzsReXZuz4gGb2HbUL+3ul93fhlBvhNdHCeTYromawd7J0muP56q8JoHPHuYkqdpW7yq7YmmccArbCq3VErvHH4uiaX6UNVWlj93Q6O74zCDEoh257Fyasgx0tNoohUAUP5hUkFlf7++qFXzxA+gaLOymx6tKzDdAnvBvToq1eBjS9zYNK8RGOmq57N/2HxiNJu5pV4P1Wnj9t6N+LBzD/VgzSW2uyobrnKNHnRfeWmiGuSOwYxFlN5hJ7g="
+#    skip_existing: true
+#    on:
+#      branch: master
+#      tags: false
+#      condition: $TRAVIS_PYTHON_VERSION != "2.7"

@@ -2,15 +2,13 @@ from numpy.distutils.core import setup, Extension
 from distutils.dir_util import copy_tree
 from distutils.errors import DistutilsFileError
 
-#import shutil
-
 
 def get_version_number():
-    for l in open('symgroupy/__init__.py', 'r').readlines():
-        if not(l.find('__version__')):
-            exec(l, globals())
-            return __version__
-
+    main_ns = {}
+    for line in open('symgroupy/__init__.py', 'r').readlines():
+        if not(line.find('__version__')):
+            exec(line, main_ns)
+            return main_ns['__version__']
 
 # Make python package
 
@@ -38,6 +36,8 @@ symgroupy = Extension('symgroupy.symgrouplib',
 setup(name='symgroupy',
       version=get_version_number(),
       description='symgroupy',
+      long_description=open('README.md').read(),
+      long_description_content_type='text/markdown',
       author='Abel Carreras',
       author_email='abelcarreras83@gmail.com',
       packages=['symgroupy'],
