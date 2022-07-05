@@ -1,4 +1,4 @@
-__version__ = '0.5.8'
+__version__ = '0.5.9'
 
 # Windows support
 import os
@@ -55,18 +55,31 @@ class Symgroupy:
 
         operation = group[0].lower().encode('ascii')
 
+        # check not implemented group label
+        if group.lower() in ['td', 'th', 't', 'o', 'oh', 'I', 'Ih']:
+            raise Exception('Not yet implemented group label: "{}"'.format(group))
+
         # check if valid group label
-        if group[0].lower() not in ['c', 'e', 'i', 'r', 's']:
+        if group[0].lower() not in ['c', 's']:
             raise Exception('wrong symmetry group label: "{}"'.format(group))
 
         try:
             operation_axis = int(group[1:])
+
+            if operation_axis < 1 or operation_axis > 90:
+                raise Exception('wrong operation order: "{}"'.format(operation_axis))
+            if operation_axis == 1:
+                if group[0].lower() == 's':
+                    operation_axis = 0
+                    operation = 'r'
+                elif group[0].lower() == 'c':
+                    operation_axis = 0
+                    operation = 'e'
+
         except ValueError:
+            operation_axis = 0
             if group.lower() in ['cs', 'ci']:
                 operation = {'cs': 'r', 'ci': 'i'}[group.lower()]
-                operation_axis = -1
-            elif operation in [b'i', b'r', b'e']:  # accepted operations
-                operation_axis = 0
             else:
                 raise Exception('wrong symmetry group label: "{}"'.format(group))
 
@@ -106,11 +119,6 @@ class Symgroupy:
         self._csm_multi = outputs[5][:multi]
         self._axis_multi = outputs[6][:multi,:]
         self._center = center
-
-        # handle ci and cs groups
-        if operation_axis == -1:
-            self._csm = self._csm/2
-            self._csm_multi = self._csm_multi/2
 
     @property
     def csm(self):
