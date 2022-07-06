@@ -1,4 +1,4 @@
-__version__ = '0.5.9'
+__version__ = '0.5.10'
 
 # Windows support
 import os
@@ -151,6 +151,7 @@ class Symgroupy:
     @property
     def center(self):
         return self._center
+
 
 if __name__ == '__main__':
 

@@ -85,10 +85,10 @@ c        character :: yn*1    ! DCC: this version always runs
 
 C--MQL ///
 c
-	common  /int1/dimr
-	common  /int2/nconv
-	common  /real2/vecnorm,vmax
-	common  /real3/A
+      common /int1/dimr
+      common /int2/nconv
+      common /real2/vecnorm,vmax
+      common /real3/A
       common /intlog/Nmulti
       common /center/cm
       common /sumrad/thresh
@@ -1055,6 +1055,14 @@ c Recolecta outputs
           NearStruc(i,:) = qf(i+iOff, :)
         endif
       enddo
+
+c Center nearest structure in center of mass of the input structure
+      do i =1, m
+        do j = 1, 3
+          NearStruc(i,j) = NearStruc(i,j) + cm(j)
+        enddo
+      enddo
+
       v_max = vmax
 
       do i=1,nll
