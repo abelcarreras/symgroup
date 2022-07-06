@@ -35,14 +35,14 @@ class TestFeN4(unittest.TestCase):
         permutation_ref = [4, 1, 3, 2, 0]
         np.testing.assert_allclose(permutation_ref, self.fen4.optimum_permutation, rtol=1e-6)
 
-#    def test_nearest_structure(self):
-#        nearest_structure_test = [[-1.60000000e-05, -1.42666667e-03,  1.33333333e-06],
-#                                  [ 1.44161250e+00, -1.11226476e+00,  6.37547696e-01],
-#                                  [ 6.37888213e-01,  1.11433926e+00, -1.43985874e+00],
-#                                  [-1.44182094e+00, -1.11519466e+00, -6.37463323e-01],
-#                                  [-6.35808432e-01,  1.11456756e+00,  1.44060173e+00]]
-#
-#        np.testing.assert_allclose(nearest_structure_test, self.fen4.nearest_structure, rtol=1e-6)
+    def test_nearest_structure(self):
+        nearest_structure_test = [[ 5.518322,   -1.67754667, 22.81702733],
+                                  [ 6.9599505,  -2.78838476, 23.4545737 ],
+                                  [ 6.15622621, -0.56178074, 21.37716726],
+                                  [ 4.07651706, -2.79131466, 22.17956268],
+                                  [ 4.88252957, -0.56155244, 24.25762773]]
+
+        np.testing.assert_allclose(nearest_structure_test, self.fen4.nearest_structure, rtol=1e-3, atol=1e-2)
 
     def test_reference_axis(self):
 
@@ -131,3 +131,67 @@ class TestFeN4_2(unittest.TestCase):
 
         np.testing.assert_allclose(multi_axis_3_ref, self.fen4.axis_multi, rtol=1e-6)
 
+
+class TestFeN4_groups(unittest.TestCase):
+
+    def setUp(self):
+
+        self._cart_coordinates = [[5.51829, -1.68040, 22.81703],
+                                  [6.78978, -3.22298, 23.08474],
+                                  [6.27712, -0.12712, 21.76775],
+                                  [4.24692, -3.22298, 22.54931],
+                                  [4.75958, -0.12712, 23.86630]]
+
+    def test_cs(self):
+
+        fen4 = Symgroupy(coordinates=self._cart_coordinates,
+                         group='cs',
+                         labels=['Fe', 'N', 'N', 'N', 'N'],
+                         central_atom=1,
+                         connectivity=None,
+                         )
+
+        csm_ref = 1.7804508
+        print(fen4.csm)
+        np.testing.assert_almost_equal(fen4.csm, csm_ref, decimal=3)
+
+    def test_ci(self):
+
+        fen4 = Symgroupy(coordinates=self._cart_coordinates,
+                         group='ci',
+                         labels=['Fe', 'N', 'N', 'N', 'N'],
+                         central_atom=1,
+                         connectivity=None,
+                         )
+
+        csm_ref = 12.24274
+        print(fen4.csm)
+        np.testing.assert_almost_equal(fen4.csm, csm_ref, decimal=3)
+
+    def test_s1(self):
+
+        fen4 = Symgroupy(coordinates=self._cart_coordinates,
+                         group='cs',
+                         multi=8,
+                         labels=['Fe', 'N', 'N', 'N', 'N'],
+                         central_atom=1,
+                         connectivity=None,
+                         )
+
+        csm_ref = 1.78045
+        print(fen4.csm)
+        np.testing.assert_almost_equal(fen4.csm, csm_ref, decimal=3)
+
+    def test_s2(self):
+
+        fen4 = Symgroupy(coordinates=self._cart_coordinates,
+                         group='s2',
+                         multi=8,
+                         labels=['Fe', 'N', 'N', 'N', 'N'],
+                         central_atom=1,
+                         connectivity=None,
+                         )
+
+        csm_ref = 12.24274
+        print(fen4.csm)
+        np.testing.assert_almost_equal(fen4.csm, csm_ref, decimal=3)
