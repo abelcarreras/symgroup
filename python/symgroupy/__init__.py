@@ -46,7 +46,7 @@ class Symgroupy:
                  central_atom=None,          # Atom number that contains the center atom (if exist)
                  connectivity=None,          # Connectivity between atoms
                  connect_thresh=1.10,        # threshold to use in connectivity='auto'
-                 permutation=None,           # fix permutation
+                 permutation=None,           # custom permutation (one operation groups only)
                  center=None):               # Center of symmetry measure (if None: search optimum)
 
         conv = _get_connectivity_vector(connectivity, len(coordinates), central_atom)
