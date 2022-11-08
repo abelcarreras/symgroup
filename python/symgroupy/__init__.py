@@ -1,4 +1,4 @@
-__version__ = '0.5.10'
+__version__ = '0.5.11'
 
 # Windows support
 import os
@@ -119,6 +119,10 @@ class Symgroupy:
         self._csm_multi = outputs[5][:multi]
         self._axis_multi = outputs[6][:multi,:]
         self._center = center
+
+        # modify permutation when central_atom != 0
+        if central_atom != 0:
+            self._optimum_permutation = np.insert(self._optimum_permutation, central_atom-1, 0)[:-1]+1
 
     @property
     def csm(self):
