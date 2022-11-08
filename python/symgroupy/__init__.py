@@ -122,7 +122,10 @@ class Symgroupy:
 
         # modify permutation when central_atom != 0
         if central_atom != 0:
-            self._optimum_permutation = np.insert(self._optimum_permutation, central_atom-1, 0)[:-1]+1
+            self._optimum_permutation = np.insert(self._optimum_permutation, central_atom-1, central_atom)[:-1]
+            for i, v in enumerate(self._optimum_permutation):
+                if i != central_atom-1 and v >= central_atom:
+                    self._optimum_permutation[i] += 1
 
     @property
     def csm(self):
