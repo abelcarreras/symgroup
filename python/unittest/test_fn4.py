@@ -32,7 +32,7 @@ class TestFeN4(unittest.TestCase):
             np.testing.assert_allclose(optimum_axis_ref, self.fen4.optimum_axis, rtol=1e-6)
 
     def test_optimum_permutation(self):
-        permutation_ref = [4, 1, 3, 2, 0]
+        permutation_ref = [1, 5, 2, 4, 3]
         np.testing.assert_allclose(permutation_ref, self.fen4.optimum_permutation, rtol=1e-6)
 
     def test_nearest_structure(self):
@@ -105,7 +105,7 @@ class TestFeN4_2(unittest.TestCase):
         np.testing.assert_allclose(optimum_axis_ref, self.fen4.optimum_axis, rtol=1e-6)
 
     def test_optimum_permutation(self):
-        permutation_ref = [1, 3, 4, 2, 0]
+        permutation_ref = [1, 2, 4, 5, 3]
         np.testing.assert_allclose(permutation_ref, self.fen4.optimum_permutation, rtol=1e-6)
 
     def test_reference_axis(self):
