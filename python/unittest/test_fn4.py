@@ -79,17 +79,17 @@ class TestFeN4_2(unittest.TestCase):
 
     def setUp(self):
 
-        cart_coordinates = [[15.51829, -1.68040, 22.81703],
-                            [ 6.78978, -3.22298, 23.08474],
+        cart_coordinates = [[ 6.78978, -3.22298, 23.08474],
                             [ 6.27712, -0.12712, 21.76775],
+                            [15.51829, -1.68040, 22.81703],
                             [ 4.24692, -3.22298, 22.54931],
                             [ 4.75958, -0.12712, 23.86630]]
 
         self.fen4 = Symgroupy(coordinates=cart_coordinates,
                               group='c3',
                               multi=3,
-                              labels=['Fe', 'N', 'N', 'N', 'N'],
-                              central_atom=1,
+                              labels=['N', 'N', 'Fe', 'N', 'N'],
+                              central_atom=3,
                               center=[0, 0, 0],
                               connectivity='auto',
                               )
@@ -105,7 +105,7 @@ class TestFeN4_2(unittest.TestCase):
         np.testing.assert_allclose(optimum_axis_ref, self.fen4.optimum_axis, rtol=1e-6)
 
     def test_optimum_permutation(self):
-        permutation_ref = [1, 2, 4, 5, 3]
+        permutation_ref = [1, 4, 3, 5, 2]
         np.testing.assert_allclose(permutation_ref, self.fen4.optimum_permutation, rtol=1e-6)
 
     def test_reference_axis(self):
