@@ -10,7 +10,7 @@ python module symgrouplib ! in
             integer, depend(coordinates), intent(hide) :: nat=shape(coordinates,0)
 !            integer, intent(in) :: nat
             real*8, dimension(nat, 3), intent(in) :: coordinates
-            character, dimension(nat), intent(in) :: labels*2
+            character, dimension(nat, 2), intent(in) :: labels*2
             integer, intent(in) :: multi, pm, oeix, central_atom
             character, intent(in) :: oper*1
             logical, intent(in) :: centerfix
