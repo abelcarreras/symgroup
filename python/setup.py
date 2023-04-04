@@ -1,7 +1,7 @@
 from numpy.distutils.core import setup, Extension
 from distutils.dir_util import copy_tree
 from distutils.errors import DistutilsFileError
-
+import sys
 
 def get_version_number():
     main_ns = {}
@@ -19,11 +19,17 @@ except DistutilsFileError:
 
 s_dir = 'src/'
 
+if sys.version_info[1] > 7:
+    pyf_file = 'symgrouplib.pyf'
+else:
+    pyf_file = 'symgrouplib_legacy.pyf'
+
+
 symgroupy = Extension('symgroupy.symgrouplib',
                       #include_dirs=include_dirs_numpy,
                       extra_f77_compile_args=['-ffixed-line-length-0'],
                       libraries=['lapack', 'blas'],
-                      sources=['symgrouplib.pyf',
+                      sources=[pyf_file,
                                s_dir + 'symgrouplib.F',
                                s_dir + 'radius.F',
                                s_dir + 'connectivity.F',
