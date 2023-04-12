@@ -86,7 +86,7 @@ class Symgroupy:
         if center is None:
             center = np.average(coordinates, axis=0)
 
-        if connectivity is None:       # not use connectivity
+        if connectivity is None or len(connectivity) == 0:       # not use connectivity
             connect_type = 0
         elif connectivity == 'auto':   # use connectivity from atomic radii
             connect_type = 1
