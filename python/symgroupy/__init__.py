@@ -1,4 +1,4 @@
-__version__ = '0.5.11'
+__version__ = '0.5.12'
 
 # Windows support
 import os
@@ -103,7 +103,7 @@ class Symgroupy:
         else:
             fix_permutation = True
 
-        labels = np.array([list('{:<2}'.format(char)) for char in labels], dtype='S')
+        labels = np.array(['{:<2}'.format(char) for char in labels], dtype='S')
         coordinates = np.ascontiguousarray(coordinates)
 
         outputs = symgrouplib.symgroup(coordinates, multi, labels, central_atom, operation,

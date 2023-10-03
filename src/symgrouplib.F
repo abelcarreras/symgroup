@@ -202,7 +202,7 @@ c     Fix permutation
         permu =.true.
       else
         DO k=1,m
-          ipf(k)=0 ! Group
+          ipf(k)=k ! Group
         ENDDO
       end if
 
@@ -719,7 +719,6 @@ c Rotation
         end do
        end if
       end if
-
 c Compute measure for each permutation
 c Group
 	DO k = 1,nll
@@ -736,7 +735,6 @@ c Group
 c	call mesura(i_oper,q,p,m,s,v)
  	CALL mesura(oeix,i_oper,noper,q,p,m,s,v,
      & ctheta,stheta,ttheta)
-
 C--MQL
        if (ktim.eq.0.and.npmt(1).eq.100) then
           call system_clock (icl_fin,icl_rat,icl_top)
