@@ -1,2 +1,2 @@
-include *.pyf
+include *.pyf *.c *.build
 readme.md
