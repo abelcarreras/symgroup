@@ -50,6 +50,7 @@ class InstallWithBuildExt(install):
             os.makedirs(self.build_temp)
 
         install_dir = pathlib.Path(self.install_lib, 'symgroupy')
+        print('Install dir: ', install_dir)
 
         subprocess.check_call(['meson', 'setup', self.build_temp, '--prefix', install_dir])
         subprocess.check_call(['meson', 'compile', '-C', self.build_temp])

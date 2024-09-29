@@ -47,7 +47,7 @@ jobs:
         working-directory: ${{env.working-directory}}
       - name: Build c extensions
         run: |
-          # python setup.py build_ext --inplace
+          python setup.py build_ext --inplace
           python setup.py install
         working-directory: ${{env.working-directory}}
       - name: Test with pytest
