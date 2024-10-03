@@ -81,10 +81,6 @@ class MesonBuildExt(build_ext):
 class InstallWithBuildExt(install):
     def run(self):
 
-        if 'build_ext' in sys.argv:
-            super().run()
-            return
-
         self.build_temp = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'build/temp')
 
         if not os.path.exists(self.build_temp):
