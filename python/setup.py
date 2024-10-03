@@ -98,8 +98,16 @@ class InstallWithBuildExt(install):
         subprocess.check_call(['meson', 'setup', self.build_temp, '--prefix', install_dir])
         subprocess.check_call(['meson', 'compile', '-C', self.build_temp])
         subprocess.check_call(['meson', 'install', '-C', self.build_temp])
-        #self.do_egg_install()
-        super().run()
+
+        import distutils.command.install as orig
+        import inspect
+
+        if not self._called_from_setup(inspect.currentframe()):
+            # Run in backward-compatibility mode to support bdist_* commands.
+            orig.install.run(self)
+        else:
+            self.do_egg_install()
+
 
 
 """
