@@ -62,7 +62,6 @@ class MesonBuildExt(build_ext):
         # make compilation dir
         if not os.path.exists(self.build_temp):
             os.makedirs(self.build_temp)
-            return
 
         print('self.build_lib:', self.build_lib)
 
@@ -84,6 +83,7 @@ class InstallWithBuildExt(install):
 
         if 'build_ext' in sys.argv:
             super().run()
+            return
 
         self.build_temp = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'build/temp')
 
