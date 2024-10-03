@@ -68,7 +68,7 @@ class MesonBuildExt(build_ext):
         workdir = os.path.dirname(os.path.abspath(__file__))
 
         install_dir = pathlib.Path(workdir, 'symgroupy')
-        install_dir = os.path.abspath(install_dir)
+        # install_dir = os.path.abspath(install_dir)
 
         #subprocess.check_call([sys.executable, 'setup.py', 'egg_info'])
 
@@ -98,8 +98,6 @@ class InstallWithBuildExt(install):
         subprocess.check_call(['meson', 'setup', self.build_temp, '--prefix', install_dir])
         subprocess.check_call(['meson', 'compile', '-C', self.build_temp])
         subprocess.check_call(['meson', 'install', '-C', self.build_temp])
-
-        return
 
         import distutils.command.install as orig
         import inspect
