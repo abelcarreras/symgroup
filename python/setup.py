@@ -99,6 +99,8 @@ class InstallWithBuildExt(install):
         subprocess.check_call(['meson', 'compile', '-C', self.build_temp])
         subprocess.check_call(['meson', 'install', '-C', self.build_temp])
 
+        return
+
         import distutils.command.install as orig
         import inspect
 
