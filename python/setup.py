@@ -136,7 +136,7 @@ setup(name='symgroupy',
       packages=['symgroupy'],
       ext_modules=[],
       cmdclass={'build_ext': MesonBuildExt,
-                'install': InstallWithBuildExt,
+                #'install': InstallWithBuildExt,
                 # 'egg_info': CustomEggInfo
                 },
       url='https://github.com/abelcarreras/symgroup',
