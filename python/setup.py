@@ -81,6 +81,10 @@ class MesonBuildExt(build_ext):
 class InstallWithBuildExt(install):
     def run(self):
 
+        if 'build_ext' in sys.argv:
+            super().run()
+
+
         self.build_temp = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'build/temp')
 
         if not os.path.exists(self.build_temp):
@@ -136,7 +140,7 @@ setup(name='symgroupy',
       packages=['symgroupy'],
       ext_modules=[],
       cmdclass={'build_ext': MesonBuildExt,
-                #'install': InstallWithBuildExt,
+                'install': InstallWithBuildExt,
                 # 'egg_info': CustomEggInfo
                 },
       url='https://github.com/abelcarreras/symgroup',
