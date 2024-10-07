@@ -87,7 +87,7 @@ class InstallWithBuildExt(install):
             os.makedirs(self.build_temp)
 
         install_dir = pathlib.Path(self.install_lib, 'symgroupy')
-        print('Install dir: ', install_dir)
+        print('Install dir: ', self.install_lib, install_dir)
         print('build dir:', self.build_temp)
         install_dir = os.path.abspath(install_dir)
 
@@ -99,32 +99,9 @@ class InstallWithBuildExt(install):
         subprocess.check_call(['meson', 'compile', '-C', self.build_temp])
         subprocess.check_call(['meson', 'install', '-C', self.build_temp])
 
+        # install
         import distutils.command.install as orig
-        import inspect
-
-        if not self._called_from_setup(inspect.currentframe()):
-            # Run in backward-compatibility mode to support bdist_* commands.
-            orig.install.run(self)
-        else:
-            self.do_egg_install()
-
-
-
-"""
-symgroupy = Extension('symgroupy.symgrouplib',
-                      #include_dirs=include_dirs_numpy,
-                      extra_f77_compile_args=['-ffixed-line-length-0'],
-                      libraries=['lapack', 'blas'],
-                      sources=[pyf_file,
-                               s_dir + 'symgrouplib.F',
-                               s_dir + 'radius.F',
-                               s_dir + 'connectivity.F',
-                               s_dir + 'jacobi.F',
-                               s_dir + 'linear_algebra.F',
-                               s_dir + 'mass.F',
-                               s_dir + 'measure.F',
-                               s_dir + 'operations.F'])
-"""
+        orig.install.run(self)
 
 setup(name='symgroupy',
       version=get_version_number(),
