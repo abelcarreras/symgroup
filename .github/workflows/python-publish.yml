@@ -66,7 +66,7 @@ jobs:
     env:
       working-directory: ./python
     needs: [ test_code ]
-    if: github.ref == 'refs/heads/master'
+    # if: github.ref == 'refs/heads/master'
     strategy:
       matrix:
         os: [ubuntu-20.04, windows-2019, macos-10.15]
@@ -102,21 +102,6 @@ jobs:
         run: |
           xcopy .\python\* . /E /C /H /R /K /O /Y
         continue-on-error: true
-
-      - name: Build wheels
-        uses: pypa/cibuildwheel@v2.4.0
-        env:
-          CIBW_BEFORE_BUILD: pip install numpy==1.19.5
-          CIBW_BUILD: cp36-* cp37-* cp38-*
-          CIBW_BEFORE_ALL_MACOS: brew reinstall gcc
-          CIBW_BEFORE_ALL_LINUX: yum install -y lapack-devel blas-devel; apt-get install -y libblas-dev liblapack-dev; apk add openblas-dev; apk add lapack-dev; echo "import platform; print(platform.platform())" | python
-          CIBW_BEFORE_BUILD_WINDOWS: >
-            copy libblas.lib C:\ProgramData\Chocolatey\lib\mingw\tools\install\mingw64\lib\gcc\x86_64-w64-mingw32\8.1.0\libblas.a &&
-            copy liblapack.lib C:\ProgramData\Chocolatey\lib\mingw\tools\install\mingw64\lib\gcc\x86_64-w64-mingw32\8.1.0\liblapack.a &&
-            copy setup_win.cfg setup.cfg &&
-            pip install numpy==1.19.5
-
-          CIBW_SKIP: "*-musllinux_* *win32*"
 
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.4.0
