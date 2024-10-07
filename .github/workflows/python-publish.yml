@@ -108,7 +108,9 @@ jobs:
         run: python -m pip install cibuildwheel==2.17.0
 
       - name: Build wheels
-        run: python -m cibuildwheel --output-dir wheelhouse
+        run: |
+          python -m cibuildwheel --output-dir wheelhouse
+          pkg-config --libs lapack
         env:
           CIBW_BEFORE_BUILD: pip install numpy==1.22.0 meson meson-python charset-normalizer setuptools
           CIBW_BUILD: cp39-* cp310-*
