@@ -118,7 +118,7 @@ jobs:
             pip install numpy==1.21.6
           CIBW_SKIP: "*-musllinux_* *win32*"
 
-      - uses: actions/actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
           path: ./wheelhouse/*.whl
 
