@@ -128,6 +128,7 @@ jobs:
             sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
             yum install -y lapack-devel blas-devel
             yum info lapack
+            find /usr/ -name "*lapack*.so" -o -name "*blas*.so"
             apt-get install -y libblas-dev liblapack-dev
             apk add openblas-dev; apk add lapack-dev
             echo "import platform; print(platform.platform())" | python
