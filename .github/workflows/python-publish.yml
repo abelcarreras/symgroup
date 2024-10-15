@@ -136,6 +136,7 @@ jobs:
 
           CIBW_BEFORE_BUILD_WINDOWS: >
             ls C:\ProgramData\Chocolatey\lib\mingw\tools\install\mingw64\lib\ &&
+            echo $MINGW_PREFIX &&
             copy libblas.lib C:\ProgramData\Chocolatey\lib\mingw\tools\install\mingw64\lib\gcc\x86_64-w64-mingw32\8.1.0\libblas.a &&
             copy liblapack.lib C:\ProgramData\Chocolatey\lib\mingw\tools\install\mingw64\lib\gcc\x86_64-w64-mingw32\8.1.0\liblapack.a &&
             copy setup_win.cfg setup.cfg &&
