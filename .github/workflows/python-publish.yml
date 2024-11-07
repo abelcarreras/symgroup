@@ -129,7 +129,7 @@ jobs:
             yum install -y lapack-devel blas-devel
             yum info lapack
             find /usr/ -name "*lapack*.so" -o -name "*blas*.so"
-            export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib64/liblapack.so
+            export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib64/
             apt-get install -y libblas-dev liblapack-dev
             apk add openblas-dev; apk add lapack-dev
             echo "import platform; print(platform.platform())" | python
