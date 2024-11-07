@@ -3,9 +3,9 @@ project('symgrouplib', 'c', 'fortran', version: '0.1.0')
 py = import('python').find_installation(pure: false)
 py_dep = py.dependency()
 
-# Localització de les llibreries LAPACK i BLAS, si és necessari
-#lapack = dependency('lapack', required: true)
-#blas = dependency('blas', required: true)
+#locate libraries LAPACK and BLAS
+lapack = dependency('lapack', required: true)
+blas = dependency('blas', required: true)
 
 
 # fortran source files
@@ -41,7 +41,7 @@ symgrouplib = py.extension_module('symgrouplib',
   fortran_sources,
   incdir_f2py / 'fortranobject.c',
   include_directories: inc_np,
-  # dependencies : [py_dep, lapack, blas],
+  dependencies : [py_dep, lapack, blas],
   fortran_args: fortran_flags,
   install : true,
   install_dir : get_option('prefix')
