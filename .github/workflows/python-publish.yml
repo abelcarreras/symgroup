@@ -124,17 +124,17 @@ jobs:
           CIBW_ARCHS_MACOS: x86_64
           CIBW_BEFORE_ALL_MACOS: brew reinstall gcc
           CIBW_BEFORE_ALL_LINUX: |
-            #sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
-            #sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
-            #yum install -y lapack-devel blas-devel
-            #yum info lapack
-            #find /usr/ -name "*lapack*.so" -o -name "*blas*.so"
+            sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
+            sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
+            yum install -y lapack-devel blas-devel
+            yum info lapack
+            find /usr/ -name "*lapack*.so" -o -name "*blas*.so"
             #export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib64/
             apt-get install -y libblas-dev liblapack-dev
             apk add openblas-dev; apk add lapack-dev
             echo "import platform; print(platform.platform())" | python
-            #cp /usr/lib64/liblapack.so .
-            #cp /usr/lib64/libblas.so .
+            cp /usr/lib64/liblapack.so .
+            cp /usr/lib64/libblas.so .
 
           CIBW_BEFORE_BUILD_WINDOWS: |
             echo $MINGW_PREFIX
