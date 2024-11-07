@@ -73,9 +73,8 @@ jobs:
         os: [ubuntu-latest]
 
     steps:
-
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v3
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
 
       - name: copy data to root (unix-like)
         run: |
