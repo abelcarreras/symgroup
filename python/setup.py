@@ -10,7 +10,7 @@ import pathlib
 try:
     from wheel.bdist_wheel import bdist_wheel as _bdist_wheel
 except ModuleNotFoundError:
-    pass
+    _bdist_wheel = object
 
 
 def get_version_number():
@@ -24,7 +24,7 @@ def get_version_number():
 try:
     copy_tree('../src', './src', update=True)
 except DistutilsFileError:
-    _bdist_wheel = None
+    pass
 
 s_dir = 'src/'
 
