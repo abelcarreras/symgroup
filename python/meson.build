@@ -4,8 +4,8 @@ py = import('python').find_installation(pure: false)
 py_dep = py.dependency()
 
 #locate libraries LAPACK and BLAS
-lapack = dependency('lapack', required: true)
-blas = dependency('blas', required: true)
+#lapack = dependency('lapack', required: true)
+#blas = dependency('blas', required: true)
 
 
 # fortran source files
@@ -19,6 +19,7 @@ fortran_sources = [
     'src/mass.F',
     'src/measure.F',
     'src/operations.F',
+    #'src/functions.F',
 ]
 
 
@@ -41,7 +42,7 @@ symgrouplib = py.extension_module('symgrouplib',
   fortran_sources,
   incdir_f2py / 'fortranobject.c',
   include_directories: inc_np,
-  dependencies : [py_dep, lapack, blas],
+  # dependencies : [py_dep, lapack, blas],
   fortran_args: fortran_flags,
   install : true,
   install_dir : get_option('prefix')
