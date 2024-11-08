@@ -92,6 +92,8 @@ class InstallWithBuildExt(install):
         if not os.path.exists(self.build_temp):
             os.makedirs(self.build_temp)
 
+        self.install_lib = self.install_lib.replace('purelib/', '')
+
         install_dir = pathlib.Path(self.install_lib, 'symgroupy')
         print('Install dir: ', self.install_lib, install_dir)
         print('build dir:', self.build_temp)
