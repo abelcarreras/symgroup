@@ -1,6 +1,7 @@
 from setuptools import setup
 from setuptools.command.build_ext import build_ext
 from setuptools.command.install import install
+from wheel.bdist_wheel import bdist_wheel as _bdist_wheel
 from distutils.dir_util import copy_tree
 from distutils.errors import DistutilsFileError
 import sys, os
@@ -103,6 +104,35 @@ class InstallWithBuildExt(install):
         import distutils.command.install as orig
         orig.install.run(self)
 
+
+class MesonBdistWheel(_bdist_wheel):
+    def run(self):
+
+        self.build_temp = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'build/temp')
+
+        if not os.path.exists(self.dist_dir):
+            os.makedirs(self.dist_dir)
+
+        workdir = os.path.dirname(os.path.abspath(__file__))
+
+        dist_dir = pathlib.Path(workdir, self.dist_dir)
+        dist_dir = os.path.abspath(dist_dir)
+
+        print('dist_dir: ', dist_dir)
+
+        subprocess.check_call(['meson', 'setup', self.build_temp, '--prefix', dist_dir])
+        subprocess.check_call(['meson', 'compile', '-C', self.build_temp])
+        # subprocess.check_call(['meson', 'install', '-C', self.build_temp])
+
+        # impl_tag, abi_tag, plat_tag = self.get_tag()
+        # archive_basename = "{}-{}-{}-{}".format(self.wheel_dist_name, impl_tag, abi_tag, plat_tag)
+        # print('archive_basename: ', archive_basename)
+
+        # self.skip_build = False
+        self.root_is_pure = False
+        super().run()
+
+
 setup(name='symgroupy',
       version=get_version_number(),
       description='symgroupy',
@@ -114,6 +144,7 @@ setup(name='symgroupy',
       ext_modules=[],
       cmdclass={'build_ext': MesonBuildExt,
                 'install': InstallWithBuildExt,
+                'bdist_wheel': MesonBdistWheel,
                 # 'egg_info': CustomEggInfo
                 },
       url='https://github.com/abelcarreras/symgroup',
