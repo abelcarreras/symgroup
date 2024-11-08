@@ -1,12 +1,17 @@
 from setuptools import setup
 from setuptools.command.build_ext import build_ext
 from setuptools.command.install import install
-from wheel.bdist_wheel import bdist_wheel as _bdist_wheel
 from distutils.dir_util import copy_tree
 from distutils.errors import DistutilsFileError
 import sys, os
 import subprocess
 import pathlib
+
+try:
+    from wheel.bdist_wheel import bdist_wheel as _bdist_wheel
+except ModuleNotFoundError:
+    pass
+
 
 def get_version_number():
     main_ns = {}
@@ -19,7 +24,7 @@ def get_version_number():
 try:
     copy_tree('../src', './src', update=True)
 except DistutilsFileError:
-    pass
+    _bdist_wheel = None
 
 s_dir = 'src/'
 
