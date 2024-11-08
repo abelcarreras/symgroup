@@ -73,8 +73,8 @@ jobs:
         os: [ubuntu-latest]
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v3
 
       - name: copy data to root (unix-like)
         run: |
@@ -119,7 +119,7 @@ jobs:
           python -m cibuildwheel --output-dir wheelhouse
           # pkg-config --libs lapack
         env:
-          CIBW_BEFORE_BUILD: pip install numpy meson meson-python charset-normalizer setuptools ninja
+          CIBW_BEFORE_BUILD: pip install numpy meson meson-python charset-normalizer setuptools
           CIBW_BUILD: cp310-*
           CIBW_ARCHS_MACOS: x86_64
           CIBW_BEFORE_ALL_MACOS: brew reinstall gcc
@@ -134,7 +134,8 @@ jobs:
             #apk add openblas-dev; apk add lapack-dev
             #echo "import platform; print(platform.platform())" | python
             #cp /usr/lib64/liblapack.so .
-            #cp /usr/lib64/libblas.so .
+            cp /usr/lib64/libblas.so .
+            python -m pip install --force-reinstall ninja
 
           CIBW_BEFORE_BUILD_WINDOWS: |
             echo $MINGW_PREFIX
