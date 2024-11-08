@@ -117,24 +117,25 @@ jobs:
       - name: Build wheels
         run: |
           python -m cibuildwheel --output-dir wheelhouse
-          pkg-config --libs lapack
+          # pkg-config --libs lapack
         env:
-          CIBW_BEFORE_BUILD: pip install numpy meson meson-python charset-normalizer setuptools
+          CIBW_BEFORE_BUILD: pip install numpy meson meson-python charset-normalizer setuptools ninja
           CIBW_BUILD: cp310-*
           CIBW_ARCHS_MACOS: x86_64
           CIBW_BEFORE_ALL_MACOS: brew reinstall gcc
           CIBW_BEFORE_ALL_LINUX: |
-            sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
-            sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
-            yum install -y lapack-devel blas-devel
-            yum info lapack
-            find /usr/ -name "*lapack*.so" -o -name "*blas*.so"
+            #sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
+            #sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
+            #yum install -y lapack-devel blas-devel
+            #yum info lapack
+            #find /usr/ -name "*lapack*.so" -o -name "*blas*.so"
             #export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib64/
-            apt-get install -y libblas-dev liblapack-dev
-            apk add openblas-dev; apk add lapack-dev
-            echo "import platform; print(platform.platform())" | python
-            cp /usr/lib64/liblapack.so .
-            cp /usr/lib64/libblas.so .
+            #apt-get install -y libblas-dev liblapack-dev
+            #apk add openblas-dev; apk add lapack-dev
+            #echo "import platform; print(platform.platform())" | python
+            #cp /usr/lib64/liblapack.so .
+            #cp /usr/lib64/libblas.so .
+            python -m pip install --force-reinstall ninja
 
           CIBW_BEFORE_BUILD_WINDOWS: |
             echo $MINGW_PREFIX
