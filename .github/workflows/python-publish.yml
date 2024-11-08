@@ -135,7 +135,6 @@ jobs:
             #echo "import platform; print(platform.platform())" | python
             #cp /usr/lib64/liblapack.so .
             #cp /usr/lib64/libblas.so .
-            python -m pip install --force-reinstall ninja
 
           CIBW_BEFORE_BUILD_WINDOWS: |
             echo $MINGW_PREFIX
