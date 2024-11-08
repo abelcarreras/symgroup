@@ -19,7 +19,7 @@ fortran_sources = [
     'src/mass.F',
     'src/measure.F',
     'src/operations.F',
-    #'src/functions.F',
+    'src/functions.F',
 ]
 
 
