@@ -142,7 +142,7 @@ jobs:
             python -m pip install --force-reinstall ninja
             copy libblas.lib C:\ProgramData\Chocolatey\lib\mingw\tools\install\mingw64\lib\gcc\x86_64-w64-mingw32\8.1.0\libblas.a
             copy liblapack.lib C:\ProgramData\Chocolatey\lib\mingw\tools\install\mingw64\lib\gcc\x86_64-w64-mingw32\8.1.0\liblapack.a
-            copy setup_win.cfg setup.cfg
+            # copy setup_win.cfg setup.cfg
           CIBW_SKIP: "*-musllinux_* *win32*"
 
       - uses: actions/upload-artifact@v4

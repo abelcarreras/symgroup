@@ -121,17 +121,6 @@ STRINGPADN(to, N, PADDING, NULLVALUE) is an inverse operation.
     } while (0)
 
 
-#ifdef DEBUGCFUNCS
-#define CFUNCSMESS(mess) fprintf(stderr,"debug-capi:"mess);
-#define CFUNCSMESSPY(mess,obj) CFUNCSMESS(mess) \
-//    PyObject_Print((PyObject *)obj,stderr,Py_PRINT_RAW);\
-//    fprintf(stderr,"\n");
-#else
-#define CFUNCSMESS(mess)
-#define CFUNCSMESSPY(mess,obj)
-#endif
-
-
 #ifndef max
 #define max(a,b) ((a > b) ? (a) : (b))
 #endif
