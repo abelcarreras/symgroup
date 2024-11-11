@@ -124,8 +124,8 @@ STRINGPADN(to, N, PADDING, NULLVALUE) is an inverse operation.
 #ifdef DEBUGCFUNCS
 #define CFUNCSMESS(mess) fprintf(stderr,"debug-capi:"mess);
 #define CFUNCSMESSPY(mess,obj) CFUNCSMESS(mess) \
-    PyObject_Print((PyObject *)obj,stderr,Py_PRINT_RAW);\
-    fprintf(stderr,"\n");
+//    PyObject_Print((PyObject *)obj,stderr,Py_PRINT_RAW);\
+//    fprintf(stderr,"\n");
 #else
 #define CFUNCSMESS(mess)
 #define CFUNCSMESSPY(mess,obj)
