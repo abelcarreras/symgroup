@@ -111,7 +111,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           python -m pip install --force-reinstall ninja
-          python -m pip install flake8 pytest meson meson-python charset-normalizer setuptools
+          python -m pip install flake8 numpy pytest meson meson-python charset-normalizer setuptools
           #if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
       - name: Build wheels
@@ -139,9 +139,9 @@ jobs:
 
           CIBW_BEFORE_BUILD_WINDOWS: |
             echo $MINGW_PREFIX
-            copy libblas.lib C:\ProgramData\Chocolatey\lib\mingw\tools\install\mingw64\lib\gcc\x86_64-w64-mingw32\8.1.0\libblas.a
-            copy liblapack.lib C:\ProgramData\Chocolatey\lib\mingw\tools\install\mingw64\lib\gcc\x86_64-w64-mingw32\8.1.0\liblapack.a
-            copy setup_win.cfg setup.cfg
+            #copy libblas.lib C:\ProgramData\Chocolatey\lib\mingw\tools\install\mingw64\lib\gcc\x86_64-w64-mingw32\8.1.0\libblas.a
+            #copy liblapack.lib C:\ProgramData\Chocolatey\lib\mingw\tools\install\mingw64\lib\gcc\x86_64-w64-mingw32\8.1.0\liblapack.a
+            #copy setup_win.cfg setup.cfg
           CIBW_SKIP: "*-musllinux_* *win32*"
 
       - uses: actions/upload-artifact@v4
