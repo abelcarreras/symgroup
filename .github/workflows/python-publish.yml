@@ -69,7 +69,7 @@ jobs:
     if: github.ref == 'refs/heads/master' ||  github.ref == 'refs/heads/migration_meson'
     strategy:
       matrix:
-        os: [ubuntu-20.04, windows-2019, macos-13]
+        os: [ubuntu-20.04, windows-2019]
         # os: [ubuntu-latest]
 
     steps:
@@ -120,10 +120,6 @@ jobs:
         env:
           CIBW_BEFORE_BUILD: pip install numpy meson meson-python charset-normalizer setuptools ninja
           CIBW_BUILD: cp310-* cp311-* cp312-*
-          CIBW_ARCHS_MACOS: x86_64
-          CIBW_BEFORE_ALL_MACOS: |
-            brew reinstall gcc
-            python -m pip install --force-reinstall ninja
           CIBW_BEFORE_ALL_LINUX: |
             #sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
             #sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
@@ -145,6 +141,55 @@ jobs:
             copy liblapack.lib C:\ProgramData\Chocolatey\lib\mingw\tools\install\mingw64\lib\gcc\x86_64-w64-mingw32\8.1.0\liblapack.a
             # copy setup_win.cfg setup.cfg
           CIBW_SKIP: "*-musllinux_* *win32*"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cibw-wheels-${{ matrix.os }}-${{ strategy.job-index }}
+          path: ./wheelhouse/*.whl
+
+  build_wheels_mac:
+    name: Build wheels on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    env:
+      working-directory: ./python
+    needs: [ test_code ]
+    if: github.ref == 'refs/heads/master' ||  github.ref == 'refs/heads/migration_meson'
+    strategy:
+      matrix:
+        os: [macos-13]
+        # os: [ubuntu-latest]
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v3
+
+      - name: copy data to root (unix-like)
+        run: |
+          ls -la
+          cp -r ${{env.working-directory}}/* .
+        continue-on-error: true
+
+      - name: Install cibuildwheel
+        run: python -m pip install cibuildwheel==2.17.0
+        #run: python -m pip install cibuildwheel==2.21.3
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install --force-reinstall ninja
+          python -m pip install flake8 numpy pytest meson meson-python charset-normalizer setuptools
+          #if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      - name: Build wheels mac
+        run: |
+          python -m cibuildwheel --output-dir wheelhouse
+        env:
+          CIBW_BEFORE_BUILD: pip install numpy meson meson-python charset-normalizer setuptools ninja
+          CIBW_BUILD: cp310-*
+          CIBW_ARCHS_MACOS: x86_64
+          CIBW_BEFORE_ALL_MACOS: |
+            brew reinstall gcc
+            python -m pip install --force-reinstall ninja
 
       - uses: actions/upload-artifact@v4
         with:
@@ -181,7 +226,7 @@ jobs:
           path: dist/*.tar.gz
 
   upload_pypi:
-      needs: [build_wheels, build_sdist, test_code]
+      needs: [build_wheels, build_wheels_mac, build_sdist, test_code]
       runs-on: ubuntu-latest
       if: github.ref == 'refs/heads/master'
       # upload to PyPI on every tag starting with 'v'
