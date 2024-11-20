@@ -24,7 +24,7 @@ def get_version_number():
 # Make python package
 try:
     copy_tree('../src', './src', update=True)
-    shutil.copy('../README.md', '.')
+    shutil.copy('../readme.md', '.')
 except DistutilsFileError:
     pass
 
