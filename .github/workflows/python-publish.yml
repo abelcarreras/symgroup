@@ -104,8 +104,8 @@ jobs:
         continue-on-error: true
 
       - name: Install cibuildwheel
-        #run: python -m pip install cibuildwheel==2.17.0
-        run: python -m pip install cibuildwheel==2.21.3
+        run: python -m pip install cibuildwheel==2.17.0
+        #run: python -m pip install cibuildwheel==2.21.3
 
       - name: Install dependencies
         run: |
@@ -123,7 +123,6 @@ jobs:
           CIBW_ARCHS_MACOS: x86_64
           CIBW_BEFORE_ALL_MACOS: |
             brew reinstall gcc
-            # python -m pip install --force-reinstall meson meson-python
             python -m pip install --force-reinstall ninja
           CIBW_BEFORE_ALL_LINUX: |
             #sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
@@ -142,8 +141,8 @@ jobs:
           CIBW_BEFORE_BUILD_WINDOWS: |
             echo $MINGW_PREFIX
             python -m pip install --force-reinstall ninja
-            #copy libblas.lib C:\ProgramData\Chocolatey\lib\mingw\tools\install\mingw64\lib\gcc\x86_64-w64-mingw32\8.1.0\libblas.a
-            #copy liblapack.lib C:\ProgramData\Chocolatey\lib\mingw\tools\install\mingw64\lib\gcc\x86_64-w64-mingw32\8.1.0\liblapack.a
+            copy libblas.lib C:\ProgramData\Chocolatey\lib\mingw\tools\install\mingw64\lib\gcc\x86_64-w64-mingw32\8.1.0\libblas.a
+            copy liblapack.lib C:\ProgramData\Chocolatey\lib\mingw\tools\install\mingw64\lib\gcc\x86_64-w64-mingw32\8.1.0\liblapack.a
             # copy setup_win.cfg setup.cfg
           CIBW_SKIP: "*-musllinux_* *win32*"
 
