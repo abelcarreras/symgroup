@@ -123,7 +123,7 @@ jobs:
           CIBW_ARCHS_MACOS: x86_64
           CIBW_BEFORE_ALL_MACOS: |
             brew reinstall gcc
-            python -m pip install --force-reinstall meson meson-python
+            # python -m pip install --force-reinstall meson meson-python
             python -m pip install --force-reinstall ninja
           CIBW_BEFORE_ALL_LINUX: |
             #sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
