@@ -8,8 +8,7 @@ import subprocess
 import pathlib
 
 try:
-    # from wheel.bdist_wheel import bdist_wheel as _bdist_wheel
-    from setuptools.command.bdist_wheel import bdist_wheel as _bdist_wheel
+    from wheel.bdist_wheel import bdist_wheel as _bdist_wheel
 
 except ModuleNotFoundError:
     from setuptools.command.bdist_wheel import bdist_wheel as _bdist_wheel
