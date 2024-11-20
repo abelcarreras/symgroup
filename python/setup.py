@@ -11,7 +11,7 @@ try:
     # from wheel.bdist_wheel import bdist_wheel as _bdist_wheel
     from setuptools.command.bdist_wheel import bdist_wheel as _bdist_wheel
 except ModuleNotFoundError:
-    bdist_wheel = object
+    _bdist_wheel = object
 
 
 def get_version_number():
