@@ -3,9 +3,7 @@ project('symgrouplib', 'c', 'fortran', version: '0.1.0')
 py = import('python').find_installation(pure: false)
 py_dep = py.dependency()
 
-#locate libraries LAPACK and BLAS
-#lapack = dependency('lapack', required: true)
-#blas = dependency('blas', required: true)
+#locate libraries quadmath (needed for windows)
 quadmath_dep = meson.get_compiler('fortran').find_library('quadmath')
 
 
@@ -43,7 +41,6 @@ symgrouplib = py.extension_module('symgrouplib',
   fortran_sources,
   incdir_f2py / 'fortranobject.c',
   include_directories: inc_np,
-  # dependencies : [py_dep, lapack, blas],
   dependencies : [py_dep, quadmath_dep],
   fortran_args: fortran_flags,
   install : true,
