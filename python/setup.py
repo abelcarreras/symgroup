@@ -6,6 +6,7 @@ from distutils.errors import DistutilsFileError
 import sys, os
 import subprocess
 import pathlib
+import shutil
 
 try:
     from wheel.bdist_wheel import bdist_wheel as _bdist_wheel
@@ -23,6 +24,7 @@ def get_version_number():
 # Make python package
 try:
     copy_tree('../src', './src', update=True)
+    shutil.copy('../README.md', '.')
 except DistutilsFileError:
     pass
 
@@ -99,8 +101,8 @@ class MesonBdistWheel(_bdist_wheel):
 setup(name='symgroupy',
       version=get_version_number(),
       description='symgroupy',
-      # long_description=open('readme.md').read(),
-      # long_description_content_type='text/markdown',
+      long_description=open('readme.md').read(),
+      long_description_content_type='text/markdown',
       author='Abel Carreras',
       author_email='abelcarreras83@gmail.com',
       packages=['symgroupy'],
