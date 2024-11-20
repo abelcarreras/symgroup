@@ -121,7 +121,9 @@ jobs:
           CIBW_BEFORE_BUILD: pip install numpy meson meson-python charset-normalizer setuptools ninja
           CIBW_BUILD: cp310-* cp311-* cp312-*
           CIBW_ARCHS_MACOS: x86_64
-          CIBW_BEFORE_ALL_MACOS: brew reinstall gcc
+          CIBW_BEFORE_ALL_MACOS: |
+            brew reinstall gcc
+            pip install meson
           CIBW_BEFORE_ALL_LINUX: |
             #sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
             #sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
