@@ -157,7 +157,6 @@ jobs:
     strategy:
       matrix:
         os: [macos-13]
-        arch: [arm64]
         # os: [ubuntu-latest]
 
     steps:
@@ -191,7 +190,8 @@ jobs:
           CIBW_BUILD: cp310-* cp311-* cp312-*
           CIBW_ARCHS_MACOS: arm64
           CIBW_BEFORE_ALL_MACOS: |
-            brew reinstall gcc
+            # brew reinstall gcc
+            arch -arm64 brew reinstall gcc
             python -m pip install --force-reinstall ninja
       - uses: actions/upload-artifact@v4
         with:
