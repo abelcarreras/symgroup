@@ -57,10 +57,10 @@ class InstallWithBuildExt(install):
         if not os.path.exists(self.build_temp):
             os.makedirs(self.build_temp)
 
-        self.install_lib = self.install_lib.replace('purelib/', '')
+        install_lib = self.install_lib.replace('platlib/', '')
 
         # define module dir to install fortran extension
-        install_dir = pathlib.Path(self.install_lib, 'symgroupy')
+        install_dir = pathlib.Path(install_lib, 'symgroupy')
         install_dir = os.path.abspath(install_dir)
 
         # build with meson and install

@@ -44,6 +44,7 @@ symgrouplib = py.extension_module('symgrouplib',
   dependencies : [py_dep, quadmath_dep],
   fortran_args: fortran_flags,
   install : true,
+  # link_args: ['-static-libgfortran', '-Wl,-rpath,@loader_path/../symgroupy.dylibs'],
   install_dir : get_option('prefix')
 )
 
