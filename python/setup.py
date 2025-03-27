@@ -54,8 +54,11 @@ class InstallWithBuildExt(install):
 
         self.build_temp = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'build/temp')
 
-        if not os.path.exists(self.build_temp):
-            os.makedirs(self.build_temp)
+        if os.path.exists(self.build_temp):
+            import shutil
+            shutil.rmtree('build')
+
+        os.makedirs(self.build_temp)
 
         install_lib = self.install_lib.replace('platlib/', '')
 
