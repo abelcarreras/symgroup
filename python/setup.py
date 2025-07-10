@@ -57,7 +57,7 @@ class InstallWithBuildExt(install):
         if not os.path.exists(self.build_temp):
             os.makedirs(self.build_temp)
 
-        self.install_lib = self.install_lib.replace('purelib/', '')
+        # self.install_lib = self.install_lib.replace('purelib/', '')
 
         # define module dir to install fortran extension
         install_dir = pathlib.Path(self.install_lib, 'symgroupy')
