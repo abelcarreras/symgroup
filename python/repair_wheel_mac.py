@@ -24,7 +24,7 @@ def find_dylibs(so_path):
             dylib = line.split(' ')[0].strip()
             if '@' in dylib:
                 print('relative found. replace: ', dylib)
-                dylib.replace('@rpath', os.path.dirname(so_path))
+                dylib = dylib.replace('@rpath', os.path.dirname(so_path))
                 print('result: ', dylib)
 
             dylibs.append(dylib)
