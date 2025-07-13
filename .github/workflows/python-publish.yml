@@ -193,7 +193,7 @@ jobs:
           CIBW_REPAIR_WHEEL_COMMAND_MACOS: "python repair_wheel_mac.py -w {dest_dir} {wheel}"
           CIBW_BEFORE_ALL_MACOS: |
             brew uninstall gcc
-            brew install --overwrite --force --cask gcc
+            brew install gcc
             python -m pip install --force-reinstall ninja
       - uses: actions/upload-artifact@v4
         with:
