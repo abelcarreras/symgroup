@@ -6,6 +6,7 @@ from distutils.errors import DistutilsFileError
 import sys, os
 import subprocess
 import pathlib
+import shutil
 
 try:
     from wheel.bdist_wheel import bdist_wheel as _bdist_wheel
@@ -78,8 +79,10 @@ class MesonBdistWheel(_bdist_wheel):
 
         self.build_temp = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'build/temp')
 
-        if not os.path.exists(self.dist_dir):
-            os.makedirs(self.dist_dir)
+        # create compile directory (overwrite if exists)
+        if os.path.exists(self.dist_dir):
+            shutil.rmtree(self.dist_dir)
+        os.makedirs(self.dist_dir)
 
         # define project root dir
         workdir = os.path.dirname(os.path.abspath(__file__))
