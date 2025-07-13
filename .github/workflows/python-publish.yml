@@ -164,9 +164,9 @@ jobs:
       - uses: actions/setup-python@v3
 
       - name: Clean previous build artifacts
-      run: |
-        rm -rf build/ wheelhouse/ dist/
-        find . -name "*.egg-info" -type d -exec rm -rf {} +
+        run: |
+          rm -rf build/ wheelhouse/ dist/
+          find . -name "*.egg-info" -type d -exec rm -rf {} +
 
       - name: copy data to root (unix-like)
         run: |
