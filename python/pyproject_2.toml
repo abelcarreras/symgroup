@@ -1,6 +1,0 @@
-[tool.cibuildwheel.macos]
-repair-wheel-command = [
-#  "export DYLD_LIBRARY_PATH=$PWD/.openblas/lib",
-#  "echo DYLD_LIBRARY_PATH $DYLD_LIBRARY_PATH",
-  "python repair_wheel_mac.py -w {dest_dir} {wheel}"
-]
