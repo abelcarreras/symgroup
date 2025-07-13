@@ -29,6 +29,9 @@ def copy_dylibs(dylibs, target_dir):
     if not os.path.exists(target_dir):
         os.makedirs(target_dir)
     for dylib in dylibs:
+        if dylib.startswith("@"):
+            print(f"skip copying runtime-relative path: {dylib}")
+            continue
         print('copy: ', dylib, target_dir)
         try:
             shutil.copy(dylib, target_dir)
