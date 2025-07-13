@@ -20,7 +20,7 @@ def find_dylibs(so_path):
     dylibs = []
     for line in result.stdout.decode().splitlines():
         print(line)
-        if '.dylib ' in line:
+        if '.dylib ' in line and not 'libSystem' in line:
             dylibs.append(line.split(' ')[0].strip())
     return dylibs
 
