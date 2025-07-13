@@ -68,8 +68,12 @@ def repair_wheel(wheel_path, output_dir):
     for so_path in glob.glob(os.path.join(so_lib_dir, '*.so')):
         dylibs = find_dylibs(so_path)
 
+        # second level of dependencies of dependencies
+        second_level = []
         for lib in dylibs:
-            dylibs += find_dylibs(lib)
+            second_level += find_dylibs(lib)
+
+        dylibs += second_level
 
         copy_dylibs(dylibs, dylib_dir)
         fix_rpaths(so_path, dylibs)
