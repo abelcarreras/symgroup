@@ -1,3 +1,10 @@
+[build-system]
+requires = [
+  "setuptools>=42",
+  "wheel",
+  "meson",             # <--- afegeix això
+]
+
 [tool.cibuildwheel.macos]
 repair-wheel-command = [
 #  "export DYLD_LIBRARY_PATH=$PWD/.openblas/lib",
