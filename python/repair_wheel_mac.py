@@ -67,6 +67,10 @@ def repair_wheel(wheel_path, output_dir):
     so_lib_dir = os.path.join(data_dir, 'purelib', 'symgroupy')
     for so_path in glob.glob(os.path.join(so_lib_dir, '*.so')):
         dylibs = find_dylibs(so_path)
+
+        for lib in dylibs:
+            dylibs += find_dylibs(lib)
+
         copy_dylibs(dylibs, dylib_dir)
         fix_rpaths(so_path, dylibs)
 
