@@ -22,8 +22,10 @@ def find_dylibs(so_path):
         print(line)
         if '.dylib ' in line and not 'libSystem' in line:
             dylib = line.split(' ')[0].strip()
-            if dylib.startswith("@"):
+            if '@' in dylib:
+                print('relative found. replace: ', dylib)
                 dylib.replace('@rpath', os.path.dirname(so_path))
+                print('result: ', dylib)
 
             dylibs.append(dylib)
     return dylibs
