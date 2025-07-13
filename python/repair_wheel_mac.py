@@ -21,7 +21,11 @@ def find_dylibs(so_path):
     for line in result.stdout.decode().splitlines():
         print(line)
         if '.dylib ' in line and not 'libSystem' in line:
-            dylibs.append(line.split(' ')[0].strip())
+            dylib = line.split(' ')[0].strip()
+            if dylib.startswith("@"):
+                dylib.replace('@rpath', os.path.dirname(so_path))
+
+            dylibs.append(dylib)
     return dylibs
 
 def copy_dylibs(dylibs, target_dir):
