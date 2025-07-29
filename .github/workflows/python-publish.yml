@@ -156,7 +156,7 @@ jobs:
     if: github.ref == 'refs/heads/master' ||  github.ref == 'refs/heads/migration_meson'
     strategy:
       matrix:
-        os: [macos-13]
+        os: [macos-14]
         # os: [ubuntu-latest]
 
     steps:
@@ -193,9 +193,10 @@ jobs:
                              pip install numpy meson meson-python charset-normalizer setuptools ninja
                              meson setup --wipe build
           CIBW_BUILD: cp310-* cp311-* cp312-*
-          # CIBW_ARCHS_MACOS: arm64
-          CIBW_ARCHS_MACOS: universal2
-          CIBW_ENVIRONMENT_MACOS: MACOSX_DEPLOYMENT_TARGET=10.15
+          # CIBW_ARCHS_MACOS: arm64, universal2
+          CIBW_ARCHS_MACOS: arm64
+          # CIBW_ENVIRONMENT_MACOS: MACOSX_DEPLOYMENT_TARGET=10.15
+          CIBW_ENVIRONMENT_MACOS: MACOSX_DEPLOYMENT_TARGET=11.0
           # CIBW_REPAIR_WHEEL_COMMAND_MACOS: "delocate-wheel --require-archs arm64 --check-archs --ignore-missing-dependencies {wheel}"
           CIBW_REPAIR_WHEEL_COMMAND_MACOS: "python repair_wheel_mac.py -w {dest_dir} {wheel}"
           CIBW_BEFORE_ALL_MACOS: |
