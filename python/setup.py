@@ -41,7 +41,7 @@ class MesonBuildExt(build_ext):
 
         # define module dir to place fortran extension
         workdir = os.path.dirname(os.path.abspath(__file__))
-        workdir = self.build_lib
+        # workdir = self.build_lib
         install_dir = pathlib.Path(workdir, 'symgroupy')
 
         # build with meson
@@ -66,7 +66,7 @@ class InstallWithBuildExt(install):
         install_dir = os.path.abspath(install_dir)
 
         # build with meson and install
-        subprocess.check_call(['meson', 'setup', self.build_temp, '--prefix', install_dir])
+        subprocess.check_call(['meson', 'setup', self.build_temp, '--prefix', str(install_dir)])
         subprocess.check_call(['meson', 'compile', '-C', self.build_temp])
         subprocess.check_call(['meson', 'install', '-C', self.build_temp])
 
