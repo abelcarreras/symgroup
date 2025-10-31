@@ -66,10 +66,10 @@ jobs:
     env:
       working-directory: ./python
     needs: [ test_code ]
-    if: github.ref == 'refs/heads/master' #||  github.ref == 'refs/heads/migration_meson'
+    if: github.ref == 'refs/heads/master' ||  github.ref == 'refs/heads/migration_meson'
     strategy:
       matrix:
-        os: [ubuntu-20.04, windows-2019]
+        os: [ubuntu-20.04, windows-2022]
         # os: [ubuntu-latest]
 
     steps:
@@ -153,7 +153,7 @@ jobs:
     env:
       working-directory: ./python
     needs: [ test_code ]
-    if: github.ref == 'refs/heads/master' ||  github.ref == 'refs/heads/migration_meson'
+    if: github.ref == 'refs/heads/master' # ||  github.ref == 'refs/heads/migration_meson'
     strategy:
       matrix:
         os: [macos-14]
