@@ -87,7 +87,6 @@ class MesonBdistWheel(_bdist_wheel):
 
         # define project root dir
         workdir = os.path.dirname(os.path.abspath(__file__))
-        workdir = self.build_lib
 
         # define distribution dir
         dist_dir = pathlib.Path(workdir, self.dist_dir)
