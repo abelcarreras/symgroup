@@ -95,7 +95,7 @@ class MesonBdistWheel(_bdist_wheel):
         subprocess.check_call(['meson', 'setup', self.build_temp, '--prefix', dist_dir])
         subprocess.check_call(['meson', 'compile', '-C', self.build_temp])
 
-        self.root_is_pure = False
+        # self.root_is_pure = False
         super().run()
 
 
