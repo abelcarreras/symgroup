@@ -41,6 +41,7 @@ class MesonBuildExt(build_ext):
 
         # define module dir to place fortran extension
         workdir = os.path.dirname(os.path.abspath(__file__))
+        workdir = self.build_lib
         install_dir = pathlib.Path(workdir, 'symgroupy')
 
         # build with meson
@@ -86,6 +87,7 @@ class MesonBdistWheel(_bdist_wheel):
 
         # define project root dir
         workdir = os.path.dirname(os.path.abspath(__file__))
+        workdir = self.build_lib
 
         # define distribution dir
         dist_dir = pathlib.Path(workdir, self.dist_dir)
@@ -95,7 +97,7 @@ class MesonBdistWheel(_bdist_wheel):
         subprocess.check_call(['meson', 'setup', self.build_temp, '--prefix', dist_dir])
         subprocess.check_call(['meson', 'compile', '-C', self.build_temp])
 
-        # self.root_is_pure = False
+        self.root_is_pure = False
         super().run()
 
 
