@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, Extension
 from setuptools.command.build_ext import build_ext
 from setuptools.command.install import install
 from distutils.dir_util import copy_tree
@@ -13,6 +13,10 @@ try:
 except ModuleNotFoundError:
     _bdist_wheel = object
 
+ext = Extension(
+    "symgroupy.symgrouplib",   # must be inside your package namespace
+    sources=["src/symgrouplib.c"],  # your actual sources
+)
 
 def get_version_number():
     main_ns = {}
@@ -113,7 +117,7 @@ setup(name='symgroupy',
       author='Abel Carreras',
       author_email='abelcarreras83@gmail.com',
       packages=['symgroupy'],
-      ext_modules=[],
+      ext_modules=[ext],
       cmdclass={'build_ext': MesonBuildExt,
                 'install': InstallWithBuildExt,
                 'bdist_wheel': MesonBdistWheel,
