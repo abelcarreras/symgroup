@@ -69,8 +69,8 @@ jobs:
     if: github.ref == 'refs/heads/master' ||  github.ref == 'refs/heads/migration_meson'
     strategy:
       matrix:
-        os: [windows-2022]
-        # os: [ubuntu-latest]
+        # os: [windows-2022]
+        os: [ubuntu-latest]
 
     steps:
       - uses: actions/checkout@v4
@@ -121,18 +121,10 @@ jobs:
           CIBW_BEFORE_BUILD: pip install numpy meson meson-python charset-normalizer setuptools ninja
           CIBW_BUILD: cp310-* cp311-* cp312-*
           CIBW_BEFORE_ALL_LINUX: |
-            #sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
-            #sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
-            #yum install -y lapack-devel blas-devel
-            #yum info lapack
-            #find /usr/ -name "*lapack*.so" -o -name "*blas*.so"
-            #export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib64/
-            #apt-get install -y libblas-dev liblapack-dev
-            #apk add openblas-dev; apk add lapack-dev
-            #echo "import platform; print(platform.platform())" | python
-            #cp /usr/lib64/liblapack.so .
-            #cp /usr/lib64/libblas.so .
+            python -m pip install --upgrade pip
             python -m pip install --force-reinstall ninja
+            python -m pip install flake8 pytest meson meson-python charset-normalizer setuptools
+            if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
           CIBW_BEFORE_BUILD_WINDOWS: |
             echo $MINGW_PREFIX
