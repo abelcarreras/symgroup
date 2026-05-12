@@ -98,7 +98,12 @@ class MesonBdistWheel(_bdist_wheel):
 
         self.root_is_pure = False
         super().run()
+    def has_ext_modules(self):   # <-- extra insurance
+        return True
 
+    def finalize_options(self):
+        super().finalize_options()
+        self.root_is_pure = False
 
 setup(name='symgroupy',
       version=get_version_number(),
