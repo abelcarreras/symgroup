@@ -74,7 +74,7 @@ jobs:
     if: github.ref == 'refs/heads/master' ||  github.ref == 'refs/heads/migration_meson'
     strategy:
       matrix:
-        os: [windows-2022, ubuntu-latest]
+        os: [macos-14, windows-2022, ubuntu-latest]
 
     steps:
       - uses: actions/checkout@v4
@@ -125,10 +125,12 @@ jobs:
         env:
           CIBW_BEFORE_BUILD: |
             pip install numpy meson meson-python charset-normalizer setuptools ninja
+            meson setup --wipe build
             rm -rf build/ wheelhouse/ dist/
             find . -name "*.egg-info" -type d -exec rm -rf {} +
 
           CIBW_BUILD: cp310-* cp311-* cp312-*
+
           CIBW_BEFORE_ALL_LINUX: |
             python -m pip install --upgrade pip
             python -m pip install --force-reinstall ninja
@@ -141,6 +143,15 @@ jobs:
             copy libblas.lib C:\ProgramData\Chocolatey\lib\mingw\tools\install\mingw64\lib\gcc\x86_64-w64-mingw32\8.1.0\libblas.a
             copy liblapack.lib C:\ProgramData\Chocolatey\lib\mingw\tools\install\mingw64\lib\gcc\x86_64-w64-mingw32\8.1.0\liblapack.a
             # copy setup_win.cfg setup.cfg
+
+          CIBW_ARCHS_MACOS: arm64
+          CIBW_ENVIRONMENT_MACOS: MACOSX_DEPLOYMENT_TARGET=11.0
+          CIBW_REPAIR_WHEEL_COMMAND_MACOS: "python repair_wheel_mac.py -w {dest_dir} {wheel}"
+          CIBW_BEFORE_ALL_MACOS: |
+            brew uninstall gcc
+            brew install gcc
+            python -m pip install --force-reinstall ninja
+
           CIBW_SKIP: "*-musllinux_* *win32*"
 
       - uses: actions/upload-artifact@v4
@@ -193,7 +204,7 @@ jobs:
           CIBW_BEFORE_BUILD: |
                              pip install numpy meson meson-python charset-normalizer setuptools ninja
                              meson setup --wipe build
-          CIBW_BUILD: cp310-* cp311-* cp312-*
+          CIBW_BUILD: cp310-* #cp311-* cp312-*
           # CIBW_ARCHS_MACOS: arm64, universal2
           CIBW_ARCHS_MACOS: arm64
           # CIBW_ENVIRONMENT_MACOS: MACOSX_DEPLOYMENT_TARGET=10.15
