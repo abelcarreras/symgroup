@@ -65,8 +65,10 @@ def repair_wheel(wheel_path, output_dir):
     fitxers = [f for f in os.listdir(extract_to)]
     print('fitxers: ', fitxers)
 
-    data_dir = glob.glob(os.path.join(extract_to, 'symgroupy-*.data'))[0]
-    so_lib_dir = os.path.join(data_dir, 'purelib', 'symgroupy')
+    #data_dir = glob.glob(os.path.join(extract_to, 'symgroupy-*.data'))[0]
+    #so_lib_dir = os.path.join(data_dir, 'purelib', 'symgroupy')
+    so_lib_dir = os.path.join(extract_to, 'symgroupy')
+
     for so_path in glob.glob(os.path.join(so_lib_dir, '*.so')):
         dylibs = find_dylibs(so_path)
 
