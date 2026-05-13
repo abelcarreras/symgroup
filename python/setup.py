@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, Extension
 from setuptools.command.build_ext import build_ext
 from setuptools.command.install import install
 from distutils.dir_util import copy_tree
@@ -13,6 +13,10 @@ try:
 except ModuleNotFoundError:
     _bdist_wheel = object
 
+ext = Extension(
+    "symgroupy.symgrouplib",   # must be inside your package namespace
+    sources=["src/symgrouplib.c"],  # your actual sources
+)
 
 def get_version_number():
     main_ns = {}
@@ -42,6 +46,7 @@ class MesonBuildExt(build_ext):
 
         # define module dir to place fortran extension
         workdir = os.path.dirname(os.path.abspath(__file__))
+        # workdir = self.build_lib
         install_dir = pathlib.Path(workdir, 'symgroupy')
 
         # build with meson
@@ -59,14 +64,14 @@ class InstallWithBuildExt(install):
         if not os.path.exists(self.build_temp):
             os.makedirs(self.build_temp)
 
-        self.install_lib = self.install_lib.replace('purelib/', '')
+        # self.install_lib = self.install_lib.replace('purelib/', '')
 
         # define module dir to install fortran extension
         install_dir = pathlib.Path(self.install_lib, 'symgroupy')
         install_dir = os.path.abspath(install_dir)
 
         # build with meson and install
-        subprocess.check_call(['meson', 'setup', self.build_temp, '--prefix', install_dir])
+        subprocess.check_call(['meson', 'setup', self.build_temp, '--prefix', str(install_dir)])
         subprocess.check_call(['meson', 'compile', '-C', self.build_temp])
         subprocess.check_call(['meson', 'install', '-C', self.build_temp])
 
@@ -80,8 +85,10 @@ class MesonBdistWheel(_bdist_wheel):
 
         self.build_temp = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'build/temp')
 
-        if not os.path.exists(self.dist_dir):
-            os.makedirs(self.dist_dir)
+        # create compile directory (overwrite if exists)
+        if os.path.exists(self.dist_dir):
+            shutil.rmtree(self.dist_dir)
+        os.makedirs(self.dist_dir)
 
         # define project root dir
         workdir = os.path.dirname(os.path.abspath(__file__))
@@ -96,7 +103,12 @@ class MesonBdistWheel(_bdist_wheel):
 
         self.root_is_pure = False
         super().run()
+    def has_ext_modules(self):   # <-- extra insurance
+        return True
 
+    def finalize_options(self):
+        super().finalize_options()
+        self.root_is_pure = False
 
 setup(name='symgroupy',
       version=get_version_number(),
@@ -106,7 +118,7 @@ setup(name='symgroupy',
       author='Abel Carreras',
       author_email='abelcarreras83@gmail.com',
       packages=['symgroupy'],
-      ext_modules=[],
+      ext_modules=[ext],
       cmdclass={'build_ext': MesonBuildExt,
                 'install': InstallWithBuildExt,
                 'bdist_wheel': MesonBdistWheel,

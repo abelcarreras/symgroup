@@ -2,13 +2,6 @@ name: Test Build wheels and Deploy
 
 # Build on every branch push, tag push, and pull request change:
 on: [push, pull_request]
-# Alternatively, to publish when a (published) GitHub Release is created, use the following:
-# on:
-#   push:
-#   pull_request:
-#   release:
-#     types:
-#       - published
 
 jobs:
 
@@ -26,6 +19,11 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
+
+      - name: Clean previous build artifacts
+        run: |
+          rm -rf build/ wheelhouse/ dist/
+          find . -name "*.egg-info" -type d -exec rm -rf {} +
 
       - name: copy data to root (unix-like)
         run: cp ../readme.md .
@@ -66,11 +64,10 @@ jobs:
     env:
       working-directory: ./python
     needs: [ test_code ]
-    if: github.ref == 'refs/heads/master' ||  github.ref == 'refs/heads/migration_meson'
+    if: github.ref == 'refs/heads/master' # ||  github.ref == 'refs/heads/migration_meson'
     strategy:
       matrix:
-        os: [ubuntu-20.04, windows-2019]
-        # os: [ubuntu-latest]
+        os: [windows-2022, ubuntu-latest]
 
     steps:
       - uses: actions/checkout@v4
@@ -104,8 +101,9 @@ jobs:
         continue-on-error: true
 
       - name: Install cibuildwheel
-        run: python -m pip install cibuildwheel==2.17.0
+        # run: python -m pip install cibuildwheel==2.17.0
         #run: python -m pip install cibuildwheel==2.21.3
+        run: python -m pip install cibuildwheel==2.23.3
 
       - name: Install dependencies
         run: |
@@ -118,21 +116,17 @@ jobs:
         run: |
           python -m cibuildwheel --output-dir wheelhouse
         env:
-          CIBW_BEFORE_BUILD: pip install numpy meson meson-python charset-normalizer setuptools ninja
+          CIBW_BEFORE_BUILD: |
+            pip install numpy meson meson-python charset-normalizer setuptools ninja
+            rm -rf build/ wheelhouse/ dist/
+            find . -name "*.egg-info" -type d -exec rm -rf {} +
+
           CIBW_BUILD: cp310-* cp311-* cp312-*
           CIBW_BEFORE_ALL_LINUX: |
-            #sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
-            #sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
-            #yum install -y lapack-devel blas-devel
-            #yum info lapack
-            #find /usr/ -name "*lapack*.so" -o -name "*blas*.so"
-            #export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib64/
-            #apt-get install -y libblas-dev liblapack-dev
-            #apk add openblas-dev; apk add lapack-dev
-            #echo "import platform; print(platform.platform())" | python
-            #cp /usr/lib64/liblapack.so .
-            #cp /usr/lib64/libblas.so .
+            python -m pip install --upgrade pip
             python -m pip install --force-reinstall ninja
+            python -m pip install flake8 pytest meson meson-python charset-normalizer setuptools
+            if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
           CIBW_BEFORE_BUILD_WINDOWS: |
             echo $MINGW_PREFIX
@@ -153,15 +147,20 @@ jobs:
     env:
       working-directory: ./python
     needs: [ test_code ]
-    if: github.ref == 'refs/heads/master' ||  github.ref == 'refs/heads/migration_meson'
+    if: github.ref == 'refs/heads/master' #||  github.ref == 'refs/heads/migration_meson'
     strategy:
       matrix:
-        os: [macos-13]
+        os: [macos-14]
         # os: [ubuntu-latest]
 
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v3
+
+      - name: Clean previous build artifacts
+        run: |
+          rm -rf build/ wheelhouse/ dist/
+          find . -name "*.egg-info" -type d -exec rm -rf {} +
 
       - name: copy data to root (unix-like)
         run: |
@@ -184,13 +183,20 @@ jobs:
         run: |
           python -m cibuildwheel --output-dir wheelhouse
         env:
-          CIBW_BEFORE_BUILD: pip install numpy meson meson-python charset-normalizer setuptools ninja
-          CIBW_BUILD: cp310-*
-          CIBW_ARCHS_MACOS: x86_64
+          CIBW_BEFORE_BUILD: |
+                             pip install numpy meson meson-python charset-normalizer setuptools ninja
+                             meson setup --wipe build
+          CIBW_BUILD: cp310-* cp311-* cp312-*
+          # CIBW_ARCHS_MACOS: arm64, universal2
+          CIBW_ARCHS_MACOS: arm64
+          # CIBW_ENVIRONMENT_MACOS: MACOSX_DEPLOYMENT_TARGET=10.15
+          CIBW_ENVIRONMENT_MACOS: MACOSX_DEPLOYMENT_TARGET=11.0
+          # CIBW_REPAIR_WHEEL_COMMAND_MACOS: "delocate-wheel --require-archs arm64 --check-archs --ignore-missing-dependencies {wheel}"
+          CIBW_REPAIR_WHEEL_COMMAND_MACOS: "python repair_wheel_mac.py -w {dest_dir} {wheel}"
           CIBW_BEFORE_ALL_MACOS: |
-            brew reinstall gcc
+            brew uninstall gcc
+            brew install gcc
             python -m pip install --force-reinstall ninja
-
       - uses: actions/upload-artifact@v4
         with:
           name: cibw-wheels-${{ matrix.os }}-${{ strategy.job-index }}
@@ -202,7 +208,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       working-directory: ./python
-    if: github.ref == 'refs/heads/master' ||  github.ref == 'refs/heads/migration_meson'
+    if: github.ref == 'refs/heads/master' #||  github.ref == 'refs/heads/migration_meson'
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python

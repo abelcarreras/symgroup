@@ -1,2 +1,3 @@
 include *.pyf *.c *.build
+repair_wheel_mac.py
 readme.md
