@@ -74,8 +74,8 @@ jobs:
     if: github.ref == 'refs/heads/master' ||  github.ref == 'refs/heads/migration_meson'
     strategy:
       matrix:
-        # os: [windows-2022]
-        os: [ubuntu-latest]
+        os: [windows-2022]
+        # os: [ubuntu-latest]
 
     steps:
       - uses: actions/checkout@v4
@@ -155,7 +155,7 @@ jobs:
     env:
       working-directory: ./python
     needs: [ test_code ]
-    if: github.ref == 'refs/heads/master' # ||  github.ref == 'refs/heads/migration_meson'
+    if: github.ref == 'refs/heads/master' ||  github.ref == 'refs/heads/migration_meson'
     strategy:
       matrix:
         os: [macos-14]
