@@ -83,11 +83,17 @@ def repair_wheel(wheel_path, output_dir):
         fix_rpaths(so_path, dylibs)
 
     # Repack the repaired wheel
-    repaired_wheel_path = os.path.join(output_dir, os.path.basename(wheel_path))
-    with zipfile.ZipFile(repaired_wheel_path, 'w') as zip_ref:
-        for root, dirs, files in os.walk(extract_to):
-            for file in files:
-                zip_ref.write(os.path.join(root, file), os.path.relpath(os.path.join(root, file), extract_to))
+    #repaired_wheel_path = os.path.join(output_dir, os.path.basename(wheel_path))
+    #with zipfile.ZipFile(repaired_wheel_path, 'w') as zip_ref:
+    #    for root, dirs, files in os.walk(extract_to):
+    #        for file in files:
+    #            zip_ref.write(os.path.join(root, file), os.path.relpath(os.path.join(root, file), extract_to))
+
+    # Repack the repaired wheel and regenerate RECORD
+    subprocess.run(
+        ["python", "-m", "wheel", "pack", extract_to, "--dest-dir", output_dir],
+        check=True,
+    )
 
 def main():
     parser = argparse.ArgumentParser(description="Repair a Python wheel by bundling dynamic libraries.")
